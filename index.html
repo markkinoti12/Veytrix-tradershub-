@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Veytrix TradersHub</title>
 
   <style>
@@ -14,144 +15,86 @@
     }
 
     body {
-      background: #0b1020;
-      color: white;
-      line-height: 1.6;
+      background: #f5f7fa;
+      color: #111827;
     }
 
     header {
-      background: #111936;
-      padding: 18px 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
+      background: #111827;
+      color: white;
+      padding: 20px;
+      text-align: center;
     }
 
-    .logo {
-      font-size: 22px;
-      font-weight: bold;
+    header h1 {
+      margin-bottom: 8px;
     }
 
-    .logo span {
-      color: #ff1744;
+    nav {
+      margin-top: 15px;
     }
 
     nav a {
       color: white;
       text-decoration: none;
-      margin-left: 18px;
-      font-size: 14px;
-    }
-
-    nav a:hover {
-      color: #ff1744;
+      margin: 0 10px;
     }
 
     .hero {
       text-align: center;
-      padding: 80px 20px;
-      background: linear-gradient(135deg, #111936, #0b1020);
+      padding: 70px 20px;
+      background: white;
     }
 
-    .hero h1 {
-      font-size: 42px;
+    .hero h2 {
+      font-size: 32px;
       margin-bottom: 15px;
     }
 
-    .hero h1 span {
-      color: #ff1744;
-    }
-
     .hero p {
-      max-width: 650px;
-      margin: auto;
-      color: #c8cee0;
-      font-size: 17px;
+      margin-bottom: 25px;
+      color: #4b5563;
     }
 
-    .button {
+    .deriv-btn {
       display: inline-block;
-      margin-top: 28px;
-      padding: 14px 28px;
-      background: #ff1744;
+      background: #e11d48;
       color: white;
-      text-decoration: none;
+      border: none;
+      padding: 15px 28px;
       border-radius: 8px;
-      font-weight: bold;
+      font-size: 17px;
+      cursor: pointer;
+      text-decoration: none;
     }
 
-    .button:hover {
-      background: #d50035;
+    .deriv-btn:hover {
+      background: #be123c;
     }
 
     section {
-      padding: 60px 20px;
-      max-width: 1100px;
+      padding: 50px 20px;
+      max-width: 900px;
       margin: auto;
+      text-align: center;
     }
 
     section h2 {
-      text-align: center;
-      margin-bottom: 35px;
-      font-size: 30px;
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .card {
-      background: #151d3d;
-      padding: 28px;
-      border-radius: 12px;
-      text-align: center;
-      border: 1px solid #263158;
-    }
-
-    .card h3 {
-      margin-bottom: 10px;
-      color: #ff4265;
-    }
-
-    .card p {
-      color: #c8cee0;
-    }
-
-    .about {
-      text-align: center;
-      color: #c8cee0;
-      max-width: 750px;
-    }
-
-    .contact {
-      text-align: center;
-      background: #111936;
-      border-radius: 15px;
-      padding: 40px 20px;
+      margin-bottom: 15px;
     }
 
     footer {
+      background: #111827;
+      color: white;
       text-align: center;
-      padding: 25px;
-      background: #070b17;
-      color: #8992ad;
-      font-size: 13px;
+      padding: 25px 15px;
+      margin-top: 30px;
     }
 
-    @media (max-width: 600px) {
-      .hero h1 {
-        font-size: 32px;
-      }
-
-      nav a {
-        margin-left: 8px;
-        font-size: 12px;
-      }
+    .warning {
+      font-size: 13px;
+      margin-top: 10px;
+      color: #d1d5db;
     }
   </style>
 </head>
@@ -159,7 +102,7 @@
 <body>
 
   <header>
-    <div class="logo">Veytrix <span>TradersHub</span></div>
+    <h1>Veytrix TradersHub</h1>
 
     <nav>
       <a href="#home">Home</a>
@@ -170,82 +113,181 @@
   </header>
 
   <section class="hero" id="home">
-    <h1>Welcome to <span>Veytrix TradersHub</span></h1>
+
+    <h2>Welcome to Veytrix TradersHub</h2>
 
     <p>
-      Your simple online hub for trading education, market information
-      and tools for traders.
+      Connect your Deriv account and access our trading platform.
     </p>
 
-    <a class="button" href="#services">Explore Services</a>
+    <button class="deriv-btn" onclick="connectDeriv()">
+      Connect with Deriv
+    </button>
+
   </section>
 
   <section id="services">
     <h2>Our Services</h2>
-
-    <div class="cards">
-
-      <div class="card">
-        <h3>Trading Education</h3>
-        <p>
-          Learn trading concepts, strategies and risk management.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Market Analysis</h3>
-        <p>
-          Get useful market insights and educational analysis.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Trading Tools</h3>
-        <p>
-          Discover helpful tools and resources for your trading journey.
-        </p>
-      </div>
-
-      <div class="card">
-        <h3>Trader Community</h3>
-        <p>
-          Connect with other traders and share ideas responsibly.
-        </p>
-      </div>
-
-    </div>
+    <p>
+      Trading tools and information for users who connect their Deriv account.
+    </p>
   </section>
 
   <section id="about">
-    <h2>About Veytrix TradersHub</h2>
-
-    <p class="about">
-      Veytrix TradersHub is an independent trading information platform
-      created to help people learn about financial markets and trading.
-      We are not the official Deriv website and we do not claim to
-      represent Deriv.
+    <h2>About Us</h2>
+    <p>
+      Veytrix TradersHub provides trading-related information and tools.
     </p>
   </section>
 
   <section id="contact">
-    <div class="contact">
-      <h2>Get In Touch</h2>
-
-      <p>
-        Have a question or want to learn more?
-      </p>
-
-      <a class="button" href="mailto:your@email.com">
-        Contact Us
-      </a>
-    </div>
+    <h2>Get in Touch</h2>
+    <p>
+      Contact us for more information about our services.
+    </p>
   </section>
 
   <footer>
-    © 2026 Veytrix TradersHub. All rights reserved.
-    <br>
-    Trading involves risk,This website provides educational information only.
+    <p>© 2026 Veytrix TradersHub. All rights reserved.</p>
+
+    <p class="warning">
+      Trading involves risk. This website provides education and information only.
+    </p>
   </footer>
+
+
+  <script>
+
+    // YOUR REGISTERED DERIV OAUTH APP ID
+    const CLIENT_ID = "34hKmGeuybw1jpVCYcQ04";
+
+    // THIS MUST EXACTLY MATCH THE REDIRECT URL
+    // REGISTERED IN YOUR DERIV APP
+    const REDIRECT_URI =
+      "https://Veytrixtradershub.com/auth/success";
+
+
+    function generateRandomString(length = 64) {
+
+      const characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+
+      let result = "";
+
+      const randomValues =
+        crypto.getRandomValues(new Uint8Array(length));
+
+      for (let i = 0; i < length; i++) {
+        result += characters[randomValues[i] % characters.length];
+      }
+
+      return result;
+    }
+
+
+    async function createCodeChallenge(verifier) {
+
+      const data =
+        new TextEncoder().encode(verifier);
+
+      const digest =
+        await crypto.subtle.digest("SHA-256", data);
+
+      return btoa(
+        String.fromCharCode(...new Uint8Array(digest))
+      )
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+    }
+
+
+    async function connectDeriv() {
+
+      try {
+
+        // Generate PKCE verifier
+        const codeVerifier =
+          generateRandomString(64);
+
+        // Generate state
+        const state =
+          generateRandomString(32);
+
+        // Save them before leaving the website
+        sessionStorage.setItem(
+          "deriv_code_verifier",
+          codeVerifier
+        );
+
+        sessionStorage.setItem(
+          "deriv_oauth_state",
+          state
+        );
+
+        // Create PKCE challenge
+        const codeChallenge =
+          await createCodeChallenge(codeVerifier);
+
+
+        // Create Deriv authorization URL
+        const authUrl =
+          new URL("https://auth.deriv.com/oauth2/auth");
+
+        authUrl.searchParams.set(
+          "response_type",
+          "code"
+        );
+
+        authUrl.searchParams.set(
+          "client_id",
+          CLIENT_ID
+        );
+
+        authUrl.searchParams.set(
+          "redirect_uri",
+          REDIRECT_URI
+        );
+
+        // Trading permission
+        authUrl.searchParams.set(
+          "scope",
+          "trade"
+        );
+
+        authUrl.searchParams.set(
+          "state",
+          state
+        );
+
+        authUrl.searchParams.set(
+          "code_challenge",
+          codeChallenge
+        );
+
+        authUrl.searchParams.set(
+          "code_challenge_method",
+          "S256"
+        );
+
+
+        // Send user to Deriv login
+        window.location.href =
+          authUrl.toString();
+
+      } catch (error) {
+
+        console.error(error);
+
+        alert(
+          "Unable to connect to Deriv. Please try again."
+        );
+
+      }
+
+    }
+
+  </script>
 
 </body>
 </html>
