@@ -1,144 +1,196 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>mtrader.online</title>
-
-  <style>
+  <title>mtrader.online</title>  <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
     }
 
     body {
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
       background: #0b0f14;
       color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      min-height: 100vh;
     }
 
-    .container {
-      width: 90%;
-      max-width: 480px;
+    header {
+      padding: 22px;
       text-align: center;
-      padding: 40px 25px;
-      background: #121820;
-      border-radius: 18px;
-      box-shadow: 0 0 30px rgba(0,0,0,0.45);
+      border-bottom: 1px solid #202733;
+    }
+
+    .logo {
+      font-size: 30px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .tagline {
+      margin-top: 8px;
+      color: #9aa4b2;
+      font-size: 14px;
+    }
+
+    main {
+      max-width: 900px;
+      margin: auto;
+      padding: 60px 20px;
+      text-align: center;
     }
 
     h1 {
-      font-size: 34px;
-      margin-bottom: 10px;
+      font-size: 42px;
+      margin-bottom: 18px;
     }
 
-    .subtitle {
-      color: #aeb8c4;
-      margin-bottom: 30px;
-      line-height: 1.5;
+    .description {
+      max-width: 650px;
+      margin: auto;
+      color: #b5beca;
+      line-height: 1.7;
+      font-size: 16px;
     }
 
-    .connect-btn {
-      display: inline-block;
+    .card {
+      margin: 40px auto;
+      max-width: 500px;
+      padding: 35px 25px;
+      background: #111720;
+      border: 1px solid #252e3a;
+      border-radius: 16px;
+    }
+
+    .card h2 {
+      margin-bottom: 12px;
+    }
+
+    .card p {
+      color: #aab3bf;
+      line-height: 1.6;
+      margin-bottom: 25px;
+    }
+
+    button {
       width: 100%;
       padding: 15px;
       border: none;
-      border-radius: 10px;
-      background: #ff444f;
-      color: white;
-      font-size: 17px;
+      border-radius: 9px;
+      background: #ffffff;
+      color: #0b0f14;
+      font-size: 16px;
       font-weight: bold;
       cursor: pointer;
-      text-decoration: none;
     }
 
-    .connect-btn:hover {
+    button:hover {
       opacity: 0.9;
     }
 
-    .info {
-      margin-top: 25px;
-      font-size: 13px;
-      color: #8793a1;
-      line-height: 1.5;
+    .status {
+      margin-top: 18px;
+      color: #9aa4b2;
+      font-size: 14px;
+      min-height: 20px;
     }
-  </style>
-</head>
 
-<body>
+    footer {
+      text-align: center;
+      padding: 30px 20px;
+      color: #6f7885;
+      font-size: 13px;
+      border-top: 1px solid #202733;
+      margin-top: 30px;
+    }
+  </style></head><body>  <header>
+    <div class="logo">mtrader.online</div>
+    <div class="tagline">Discipline • Focus • Consistency</div>
+  </header>  <main><h1>Welcome to mtrader.online</h1>
 
-  <div class="container">
-    <h1>mtrader.online</h1>
+<p class="description">
+  Access your trading environment through a secure connection
+  with your Deriv account.
+</p>
 
-    <p class="subtitle">
-      Connect your Deriv account to access the trading platform.
-    </p>
+<div class="card">
+  <h2>Connect your Deriv account</h2>
 
-    <button class="connect-btn" id="connectButton">
-      Connect with Deriv
-    </button>
+  <p>
+    Continue to Deriv to authenticate and authorize this application.
+    Your Deriv password is entered only on Deriv's official
+    authentication page.
+  </p>
 
-    <p class="info">
-      You will be redirected to Deriv to authenticate and authorize
-      mtrader.online. Your Deriv password is not entered on this website.
-    </p>
-  </div>
+  <button id="connectButton">
+    Connect with Deriv
+  </button>
 
-<script>
+  <div class="status" id="status"></div>
+</div>
+
+  </main>  <footer>
+    © 2026 mtrader.online. All rights reserved.
+    <br><br>
+    Trading involves risk. Information provided is for educational
+    purposes only.
+  </footer><script>
   /*
-   * ==========================================
-   * mtrader.online - Deriv OAuth 2.0 + PKCE
-   * ==========================================
-   */
+    ============================================================
+    mtrader.online — Deriv OAuth 2.0 + PKCE
+    ============================================================
+  */
 
-  const CLIENT_ID = "YOUR_DERIV_CLIENT_ID";
+  // PUT YOUR DERIV OAUTH APP ID HERE
+  const CLIENT_ID = "YOUR_DERIV_APP_ID";
 
-  /*
-   * IMPORTANT:
-   * This URL MUST exactly match the Redirect URL
-   * registered inside your Deriv OAuth application.
-   */
-  const REDIRECT_URI = "https://mtrader.online/callback";
+  // This MUST exactly match the redirect URL registered
+  // in your Deriv application.
+  const REDIRECT_URI = "https://mtrader.online/auth/success";
 
-  /*
-   * Generate a secure random string.
-   */
+  const AUTH_URL = "https://auth.deriv.com/oauth2/auth";
+
+  const connectButton = document.getElementById("connectButton");
+  const status = document.getElementById("status");
+
+
+  // Generate a secure random string
   function generateRandomString(length) {
     const characters =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
 
-    const randomValues = new Uint8Array(length);
-    crypto.getRandomValues(randomValues);
+    const values = new Uint8Array(length);
+    crypto.getRandomValues(values);
 
     let result = "";
 
     for (let i = 0; i < length; i++) {
-      result += characters[randomValues[i] % characters.length];
+      result += characters[values[i] % characters.length];
     }
 
     return result;
   }
 
-  /*
-   * Convert ArrayBuffer to Base64URL.
-   */
+
+  // Convert ArrayBuffer to Base64URL
   function base64UrlEncode(buffer) {
-    return btoa(
-      String.fromCharCode(...new Uint8Array(buffer))
-    )
+    let binary = "";
+
+    const bytes = new Uint8Array(buffer);
+
+    for (let i = 0; i < bytes.length; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+
+    return btoa(binary)
       .replace(/\+/g, "-")
       .replace(/\//g, "_")
       .replace(/=+$/, "");
   }
 
-  /*
-   * Create PKCE challenge.
-   */
+
+  // Create SHA-256 PKCE challenge
   async function createCodeChallenge(verifier) {
 
     const data = new TextEncoder().encode(verifier);
@@ -151,28 +203,31 @@
     return base64UrlEncode(digest);
   }
 
-  /*
-   * Start Deriv OAuth login.
-   */
+
   async function connectToDeriv() {
 
-    if (CLIENT_ID === "YOUR_DERIV_CLIENT_ID") {
-      alert("Add your Deriv OAuth Client ID to the index.html first.");
+    if (CLIENT_ID === "YOUR_DERIV_APP_ID") {
+      status.textContent =
+        "Add your Deriv App ID to the code first.";
       return;
     }
 
     try {
 
+      status.textContent =
+        "Preparing secure Deriv connection...";
+
+      // Generate PKCE verifier
       const codeVerifier = generateRandomString(64);
 
+      // Generate state for CSRF protection
       const state = generateRandomString(32);
 
+      // Create challenge
       const codeChallenge =
         await createCodeChallenge(codeVerifier);
 
-      /*
-       * Save values so the callback can verify them.
-       */
+      // Store values so they survive the redirect
       sessionStorage.setItem(
         "pkce_code_verifier",
         codeVerifier
@@ -183,12 +238,8 @@
         state
       );
 
-      /*
-       * Build official Deriv OAuth URL.
-       */
-      const authUrl = new URL(
-        "https://auth.deriv.com/oauth2/auth"
-      );
+      // Build Deriv authorization URL
+      const authUrl = new URL(AUTH_URL);
 
       authUrl.searchParams.set(
         "response_type",
@@ -205,11 +256,6 @@
         REDIRECT_URI
       );
 
-      /*
-       * Request trading access.
-       * Add/remove scopes according to what
-       * your application actually needs.
-       */
       authUrl.searchParams.set(
         "scope",
         "trade"
@@ -230,29 +276,22 @@
         "S256"
       );
 
-      /*
-       * Send the user to Deriv.
-       */
+      // Send the user to Deriv
       window.location.href = authUrl.toString();
 
     } catch (error) {
 
       console.error(error);
 
-      alert(
-        "Unable to start Deriv authentication."
-      );
+      status.textContent =
+        "Unable to start the Deriv connection.";
     }
   }
 
-  document
-    .getElementById("connectButton")
-    .addEventListener(
-      "click",
-      connectToDeriv
-    );
 
-</script>
-
-</body>
-  </html>
+  connectButton.addEventListener(
+    "click",
+    connectToDeriv
+  );
+</script></body>
+</html>
