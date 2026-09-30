@@ -20,24 +20,239 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
     }
 
     .container {
-      width: 100%;
-      max-width: 430px;
+      width: 90%;
+      max-width: 480px;
+      text-align: center;
+      padding: 40px 25px;
       background: #121820;
       border-radius: 18px;
-      padding: 35px 25px;
-      text-align: center;
-      box-shadow: 0 10px 40px rgba(0,0,0,0.45);
+      box-shadow: 0 0 30px rgba(0,0,0,0.45);
     }
 
-    .logo {
-      font-size: 32px;
+    h1 {
+      font-size: 34px;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #aeb8c4;
+      margin-bottom: 30px;
+      line-height: 1.5;
+    }
+
+    .connect-btn {
+      display: inline-block;
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #ff444f;
+      color: white;
+      font-size: 17px;
       font-weight: bold;
-      margin-bottom: 12px;
+      cursor: pointer;
+      text-decoration: none;
     }
 
-    .logo span {
-      color: #00c896
+    .connect-btn:hover {
+      opacity: 0.9;
+    }
+
+    .info {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #8793a1;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>mtrader.online</h1>
+
+    <p class="subtitle">
+      Connect your Deriv account to access the trading platform.
+    </p>
+
+    <button class="connect-btn" id="connectButton">
+      Connect with Deriv
+    </button>
+
+    <p class="info">
+      You will be redirected to Deriv to authenticate and authorize
+      mtrader.online. Your Deriv password is not entered on this website.
+    </p>
+  </div>
+
+<script>
+  /*
+   * ==========================================
+   * mtrader.online - Deriv OAuth 2.0 + PKCE
+   * ==========================================
+   */
+
+  const CLIENT_ID = "YOUR_DERIV_CLIENT_ID";
+
+  /*
+   * IMPORTANT:
+   * This URL MUST exactly match the Redirect URL
+   * registered inside your Deriv OAuth application.
+   */
+  const REDIRECT_URI = "https://mtrader.online/callback";
+
+  /*
+   * Generate a secure random string.
+   */
+  function generateRandomString(length) {
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+
+    const randomValues = new Uint8Array(length);
+    crypto.getRandomValues(randomValues);
+
+    let result = "";
+
+    for (let i = 0; i < length; i++) {
+      result += characters[randomValues[i] % characters.length];
+    }
+
+    return result;
+  }
+
+  /*
+   * Convert ArrayBuffer to Base64URL.
+   */
+  function base64UrlEncode(buffer) {
+    return btoa(
+      String.fromCharCode(...new Uint8Array(buffer))
+    )
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+
+  /*
+   * Create PKCE challenge.
+   */
+  async function createCodeChallenge(verifier) {
+
+    const data = new TextEncoder().encode(verifier);
+
+    const digest = await crypto.subtle.digest(
+      "SHA-256",
+      data
+    );
+
+    return base64UrlEncode(digest);
+  }
+
+  /*
+   * Start Deriv OAuth login.
+   */
+  async function connectToDeriv() {
+
+    if (CLIENT_ID === "YOUR_DERIV_CLIENT_ID") {
+      alert("Add your Deriv OAuth Client ID to the index.html first.");
+      return;
+    }
+
+    try {
+
+      const codeVerifier = generateRandomString(64);
+
+      const state = generateRandomString(32);
+
+      const codeChallenge =
+        await createCodeChallenge(codeVerifier);
+
+      /*
+       * Save values so the callback can verify them.
+       */
+      sessionStorage.setItem(
+        "pkce_code_verifier",
+        codeVerifier
+      );
+
+      sessionStorage.setItem(
+        "oauth_state",
+        state
+      );
+
+      /*
+       * Build official Deriv OAuth URL.
+       */
+      const authUrl = new URL(
+        "https://auth.deriv.com/oauth2/auth"
+      );
+
+      authUrl.searchParams.set(
+        "response_type",
+        "code"
+      );
+
+      authUrl.searchParams.set(
+        "client_id",
+        CLIENT_ID
+      );
+
+      authUrl.searchParams.set(
+        "redirect_uri",
+        REDIRECT_URI
+      );
+
+      /*
+       * Request trading access.
+       * Add/remove scopes according to what
+       * your application actually needs.
+       */
+      authUrl.searchParams.set(
+        "scope",
+        "trade"
+      );
+
+      authUrl.searchParams.set(
+        "state",
+        state
+      );
+
+      authUrl.searchParams.set(
+        "code_challenge",
+        codeChallenge
+      );
+
+      authUrl.searchParams.set(
+        "code_challenge_method",
+        "S256"
+      );
+
+      /*
+       * Send the user to Deriv.
+       */
+      window.location.href = authUrl.toString();
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        "Unable to start Deriv authentication."
+      );
+    }
+  }
+
+  document
+    .getElementById("connectButton")
+    .addEventListener(
+      "click",
+      connectToDeriv
+    );
+
+</script>
+
+</body>
+  </html>
