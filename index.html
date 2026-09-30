@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <title>Veytrix TradersHub</title>
+  <title>mtrader.online</title>
 
   <style>
     * {
@@ -15,86 +14,108 @@
     }
 
     body {
-      background: #f5f7fa;
-      color: #111827;
+      background: #0b0f14;
+      color: white;
+      line-height: 1.6;
     }
 
     header {
-      background: #111827;
-      color: white;
+      background: #111820;
       padding: 20px;
       text-align: center;
+      border-bottom: 1px solid #26313d;
     }
 
     header h1 {
-      margin-bottom: 8px;
+      font-size: 28px;
     }
 
     nav {
-      margin-top: 15px;
+      margin-top: 12px;
     }
 
     nav a {
       color: white;
       text-decoration: none;
       margin: 0 10px;
+      font-size: 15px;
     }
 
     .hero {
+      min-height: 70vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       text-align: center;
-      padding: 70px 20px;
-      background: white;
+      padding: 30px 20px;
+      background: linear-gradient(135deg, #0b0f14, #152331);
     }
 
     .hero h2 {
-      font-size: 32px;
+      font-size: 42px;
       margin-bottom: 15px;
     }
 
     .hero p {
-      margin-bottom: 25px;
-      color: #4b5563;
+      color: #b8c2cc;
+      max-width: 600px;
+      margin: auto;
     }
 
-    .deriv-btn {
+    .btn {
       display: inline-block;
-      background: #e11d48;
-      color: white;
-      border: none;
-      padding: 15px 28px;
-      border-radius: 8px;
-      font-size: 17px;
-      cursor: pointer;
+      margin-top: 25px;
+      padding: 14px 25px;
+      background: #00d4ff;
+      color: #071018;
       text-decoration: none;
+      font-weight: bold;
+      border-radius: 6px;
     }
 
-    .deriv-btn:hover {
-      background: #be123c;
+    .btn:hover {
+      background: #00a9cc;
     }
 
     section {
-      padding: 50px 20px;
-      max-width: 900px;
-      margin: auto;
+      padding: 60px 20px;
       text-align: center;
     }
 
     section h2 {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
+    }
+
+    .services {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .card {
+      background: #111820;
+      border: 1px solid #26313d;
+      padding: 25px;
+      width: 280px;
+      border-radius: 10px;
+    }
+
+    .card h3 {
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      color: #b8c2cc;
     }
 
     footer {
-      background: #111827;
-      color: white;
+      background: #111820;
       text-align: center;
-      padding: 25px 15px;
-      margin-top: 30px;
-    }
-
-    .warning {
-      font-size: 13px;
-      margin-top: 10px;
-      color: #d1d5db;
+      padding: 25px;
+      color: #8995a1;
+      font-size: 14px;
     }
   </style>
 </head>
@@ -102,7 +123,7 @@
 <body>
 
   <header>
-    <h1>Veytrix TradersHub</h1>
+    <h1>mtrader.online</h1>
 
     <nav>
       <a href="#home">Home</a>
@@ -113,181 +134,77 @@
   </header>
 
   <section class="hero" id="home">
+    <div>
+      <h2>Welcome to mtrader.online</h2>
 
-    <h2>Welcome to Veytrix TradersHub</h2>
+      <p>
+        Explore trading tools and educational information designed
+        to help you learn, stay disciplined and improve your trading knowledge.
+      </p>
 
-    <p>
-      Connect your Deriv account and access our trading platform.
-    </p>
-
-    <button class="deriv-btn" onclick="connectDeriv()">
-      Connect with Deriv
-    </button>
-
+      <a
+        class="btn"
+        href="https://oauth.deriv.com/oauth2/authorize?app_id=34hKmGeuybw1jpVCYcQ04&redirect_uri=https%3A%2F%2Fmtrader.online%2Fauth%2Fsuccess"
+      >
+        Connect with Deriv
+      </a>
+    </div>
   </section>
 
   <section id="services">
     <h2>Our Services</h2>
-    <p>
-      Trading tools and information for users who connect their Deriv account.
-    </p>
+
+    <div class="services">
+
+      <div class="card">
+        <h3>Trading Education</h3>
+        <p>
+          Educational information to help you understand trading concepts.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Trading Tools</h3>
+        <p>
+          Explore useful resources for your trading journey.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Discipline & Focus</h3>
+        <p>
+          Learn the importance of discipline, focus and consistency.
+        </p>
+      </div>
+
+    </div>
   </section>
 
   <section id="about">
-    <h2>About Us</h2>
+    <h2>About mtrader.online</h2>
+
     <p>
-      Veytrix TradersHub provides trading-related information and tools.
+      mtrader.online provides trading education and information.
+      Trading involves risk. Always understand the risks before trading.
     </p>
   </section>
 
   <section id="contact">
-    <h2>Get in Touch</h2>
-    <p>
-      Contact us for more information about our services.
-    </p>
+    <h2>Contact</h2>
+
+    <p>Have a question? Get in touch with us.</p>
+
+    <a class="btn" href="mailto:contact@mtrader.online">
+      Get in touch
+    </a>
   </section>
 
   <footer>
-    <p>© 2026 Veytrix TradersHub. All rights reserved.</p>
-
-    <p class="warning">
-      Trading involves risk. This website provides education and information only.
+    <p>© 2026 mtrader.online. All rights reserved.</p>
+    <p>
+      Trading involves risk. This website provides educational information only.
     </p>
   </footer>
 
-
-  <script>
-
-    // YOUR REGISTERED DERIV OAUTH APP ID
-    const CLIENT_ID = "34hKmGeuybw1jpVCYcQ04";
-
-    // THIS MUST EXACTLY MATCH THE REDIRECT URL
-    // REGISTERED IN YOUR DERIV APP
-    const REDIRECT_URI =
-      "https://mtrader.online/auth/success";
-
-
-    function generateRandomString(length = 64) {
-
-      const characters =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
-
-      let result = "";
-
-      const randomValues =
-        crypto.getRandomValues(new Uint8Array(length));
-
-      for (let i = 0; i < length; i++) {
-        result += characters[randomValues[i] % characters.length];
-      }
-
-      return result;
-    }
-
-
-    async function createCodeChallenge(verifier) {
-
-      const data =
-        new TextEncoder().encode(verifier);
-
-      const digest =
-        await crypto.subtle.digest("SHA-256", data);
-
-      return btoa(
-        String.fromCharCode(...new Uint8Array(digest))
-      )
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/, "");
-    }
-
-
-    async function connectDeriv() {
-
-      try {
-
-        // Generate PKCE verifier
-        const codeVerifier =
-          generateRandomString(64);
-
-        // Generate state
-        const state =
-          generateRandomString(32);
-
-        // Save them before leaving the website
-        sessionStorage.setItem(
-          "deriv_code_verifier",
-          codeVerifier
-        );
-
-        sessionStorage.setItem(
-          "deriv_oauth_state",
-          state
-        );
-
-        // Create PKCE challenge
-        const codeChallenge =
-          await createCodeChallenge(codeVerifier);
-
-
-        // Create Deriv authorization URL
-        const authUrl =
-          new URL("https://auth.deriv.com/oauth2/auth");
-
-        authUrl.searchParams.set(
-          "response_type",
-          "code"
-        );
-
-        authUrl.searchParams.set(
-          "client_id",
-          CLIENT_ID
-        );
-
-        authUrl.searchParams.set(
-          "redirect_uri",
-          REDIRECT_URI
-        );
-
-        // Trading permission
-        authUrl.searchParams.set(
-          "scope",
-          "trade"
-        );
-
-        authUrl.searchParams.set(
-          "state",
-          state
-        );
-
-        authUrl.searchParams.set(
-          "code_challenge",
-          codeChallenge
-        );
-
-        authUrl.searchParams.set(
-          "code_challenge_method",
-          "S256"
-        );
-
-
-        // Send user to Deriv login
-        window.location.href =
-          authUrl.toString();
-
-      } catch (error) {
-
-        console.error(error);
-
-        alert(
-          "Unable to connect to Deriv. Please try again."
-        );
-
-      }
-
-    }
-
-  </script>
-
 </body>
-</html>
+  </html>
