@@ -4,7 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>MTrader - Deriv Trading</title>
+  <title>mtrader.online</title>
+
+  <meta name="description"
+        content="mtrader.online - Deriv API connected trading platform">
 
   <style>
     * {
@@ -14,55 +17,559 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #0b0b0f;
-      color: white;
+      font-family: Arial, Helvetica, sans-serif;
       min-height: 100vh;
+      background:
+        radial-gradient(circle at top, #18304a 0%, #07111c 45%, #03070c 100%);
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
-      padding: 20px;
+      width: 100%;
+      padding: 20px 6%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #24242b;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.18);
     }
 
     .logo {
       font-size: 24px;
-      font-weight: bold;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+
+    .logo span {
+      color: #38bdf8;
+    }
+
+    nav {
+      display: flex;
+      gap: 24px;
     }
 
     nav a {
-      color: white;
+      color: #dce7f2;
       text-decoration: none;
-      margin-left: 18px;
+      font-size: 14px;
     }
 
-    .container {
-      max-width: 900px;
+    nav a:hover {
+      color: #38bdf8;
+    }
+
+    main {
+      flex: 1;
+      width: 100%;
+      max-width: 1100px;
       margin: auto;
-      padding: 70px 20px;
+      padding: 80px 25px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero {
+      width: 100%;
+      max-width: 760px;
       text-align: center;
+      padding: 55px 30px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 24px;
+      background: rgba(8,18,30,0.72);
+      box-shadow: 0 25px 70px rgba(0,0,0,0.35);
+      backdrop-filter: blur(12px);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 8px 14px;
+      border-radius: 50px;
+      background: rgba(56,189,248,0.1);
+      color: #7dd3fc;
+      border: 1px solid rgba(56,189,248,0.25);
+      font-size: 12px;
+      margin-bottom: 25px;
     }
 
     h1 {
-      font-size: 42px;
-      margin-bottom: 18px;
+      font-size: clamp(42px, 8vw, 72px);
+      line-height: 1;
+      margin-bottom: 22px;
     }
 
-    p {
-      color: #b9b9c2;
-      line-height: 1.6;
-      margin-bottom: 30px;
+    h1 span {
+      color: #38bdf8;
     }
 
-    .connect {
-      display: inline-block;
-      padding: 15px 30px;
-      border: none;
-      border-radius: 10px;
-      background: #ff444f;
-      color: white;
+    .subtitle {
+      color: #aebdcc;
       font-size: 17px;
-      font
+      line-height: 1.7;
+      max-width: 600px;
+      margin: 0 auto 35px;
+    }
+
+    .connect-button {
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 230px;
+      padding: 16px 28px;
+      border-radius: 12px;
+      background: #38bdf8;
+      color: #03111c;
+      font-size: 16px;
+      font-weight: 800;
+      text-decoration: none;
+      transition: 0.2s ease;
+    }
+
+    .connect-button:hover {
+      transform: translateY(-2px);
+      background: #7dd3fc;
+    }
+
+    .status {
+      margin-top: 22px;
+      min-height: 24px;
+      color: #94a3b8;
+      font-size: 13px;
+    }
+
+    .features {
+      margin-top: 45px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+    }
+
+    .feature {
+      padding: 20px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.035);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .feature strong {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+    }
+
+    .feature small {
+      color: #8fa0b2;
+      line-height: 1.5;
+    }
+
+    footer {
+      padding: 22px;
+      text-align: center;
+      color: #66788a;
+      font-size: 12px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+    }
+
+    @media (max-width: 700px) {
+      header {
+        padding: 18px 20px;
+      }
+
+      nav {
+        display: none;
+      }
+
+      main {
+        padding: 45px 15px;
+      }
+
+      .hero {
+        padding: 45px 20px;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">mtrader<span>.online</span></div>
+
+  <nav>
+    <a href="/">Home</a>
+    <a href="#platform">Platform</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero" id="platform">
+
+    <div class="badge">
+      DERIV API PLATFORM
+    </div>
+
+    <h1>
+      Trade with <span>mtrader</span>
+    </h1>
+
+    <p class="subtitle">
+      Connect your Deriv account securely and continue to your
+      trading platform through the Deriv authorization system.
+    </p>
+
+    <a
+      id="connectButton"
+      class="connect-button"
+      href="#"
+      onclick="connectToDeriv(event)"
+    >
+      Connect to Deriv
+    </a>
+
+    <div id="status" class="status"></div>
+
+    <div class="features">
+      <div class="feature">
+        <strong>Deriv Connected</strong>
+        <small>Uses Deriv's authorization system.</small>
+      </div>
+
+      <div class="feature">
+        <strong>Secure Flow</strong>
+        <small>Your Deriv password is never entered into this website.</small>
+      </div>
+
+      <div class="feature">
+        <strong>Trading Platform</strong>
+        <small>Designed to connect with your existing API platform.</small>
+      </div>
+    </div>
+
+  </section>
+</main>
+
+<footer>
+  © 2026 mtrader.online — All rights reserved.
+  Trading involves risk. This website provides educational information only.
+</footer>
+
+<script>
+  /*
+    ============================================================
+    DERIV OAUTH SETTINGS
+    ============================================================
+
+    IMPORTANT:
+    Replace YOUR_DERIV_APP_ID below with the App ID from
+    your Deriv OAuth application.
+
+    The redirect URL MUST be exactly the same as the one
+    registered in your Deriv application.
+
+    Example:
+    https://mtrader.online/auth/success
+
+    If your Deriv dashboard currently has a different
+    redirect URL, change REDIRECT_URI below to match it
+    exactly.
+  */
+
+  const DERIV_APP_ID = "YOUR_DERIV_APP_ID";
+
+  const REDIRECT_URI =
+    "https://mtrader.online/auth/success";
+
+  const AUTH_URL =
+    "https://auth.deriv.com/oauth2/auth";
+
+
+  /*
+    Generate a secure random PKCE verifier.
+  */
+  function generateCodeVerifier() {
+    const random = new Uint8Array(64);
+    crypto.getRandomValues(random);
+
+    const characters =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+
+    let result = "";
+
+    for (let i = 0; i < random.length; i++) {
+      result += characters[random[i] % characters.length];
+    }
+
+    return result;
+  }
+
+
+  /*
+    Convert ArrayBuffer to Base64URL.
+  */
+  function base64UrlEncode(buffer) {
+    let binary = "";
+
+    const bytes = new Uint8Array(buffer);
+
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+
+    return btoa(binary)
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+  }
+
+
+  /*
+    Create SHA-256 PKCE challenge.
+  */
+  async function createCodeChallenge(verifier) {
+    const data =
+      new TextEncoder().encode(verifier);
+
+    const digest =
+      await crypto.subtle.digest("SHA-256", data);
+
+    return base64UrlEncode(digest);
+  }
+
+
+  /*
+    Generate random OAuth state.
+  */
+  function generateState() {
+    const random = new Uint8Array(24);
+
+    crypto.getRandomValues(random);
+
+    return Array.from(random)
+      .map(byte => byte.toString(16).padStart(2, "0"))
+      .join("");
+  }
+
+
+  /*
+    Start Deriv OAuth authorization.
+  */
+  async function connectToDeriv(event) {
+
+    event.preventDefault();
+
+    const status =
+      document.getElementById("status");
+
+    if (
+      !DERIV_APP_ID ||
+      DERIV_APP_ID === "YOUR_DERIV_APP_ID"
+    ) {
+      status.textContent =
+        "Deriv App ID has not been configured yet.";
+
+      return;
+    }
+
+    try {
+
+      status.textContent =
+        "Connecting securely to Deriv...";
+
+      const codeVerifier =
+        generateCodeVerifier();
+
+      const codeChallenge =
+        await createCodeChallenge(codeVerifier);
+
+      const state =
+        generateState();
+
+
+      /*
+        Save the PKCE information before redirecting.
+      */
+      sessionStorage.setItem(
+        "deriv_code_verifier",
+        codeVerifier
+      );
+
+      sessionStorage.setItem(
+        "deriv_oauth_state",
+        state
+      );
+
+
+      /*
+        Build the official Deriv OAuth URL.
+      */
+      const url =
+        new URL(AUTH_URL);
+
+      url.searchParams.set(
+        "response_type",
+        "code"
+      );
+
+      url.searchParams.set(
+        "client_id",
+        DERIV_APP_ID
+      );
+
+      url.searchParams.set(
+        "redirect_uri",
+        REDIRECT_URI
+      );
+
+      url.searchParams.set(
+        "scope",
+        "trade"
+      );
+
+      url.searchParams.set(
+        "state",
+        state
+      );
+
+      url.searchParams.set(
+        "code_challenge",
+        codeChallenge
+      );
+
+      url.searchParams.set(
+        "code_challenge_method",
+        "S256"
+      );
+
+
+      /*
+        Send the user to Deriv.
+      */
+      window.location.href =
+        url.toString();
+
+    } catch (error) {
+
+      console.error(error);
+
+      status.textContent =
+        "Unable to start the Deriv connection.";
+    }
+  }
+
+
+  /*
+    Detect an OAuth callback.
+
+    The authorization code is NOT exchanged here.
+    A backend must perform that secure operation.
+  */
+  function handleCallback() {
+
+    const params =
+      new URLSearchParams(
+        window.location.search
+      );
+
+    const error =
+      params.get("error");
+
+    const code =
+      params.get("code");
+
+    const returnedState =
+      params.get("state");
+
+    const savedState =
+      sessionStorage.getItem(
+        "deriv_oauth_state"
+      );
+
+    const status =
+      document.getElementById("status");
+
+
+    if (error) {
+
+      status.textContent =
+        "Deriv authorization was cancelled or denied.";
+
+      return;
+    }
+
+
+    if (!code) {
+      return;
+    }
+
+
+    if (
+      !savedState ||
+      returnedState !== savedState
+    ) {
+
+      status.textContent =
+        "Security verification failed.";
+
+      return;
+    }
+
+
+    /*
+      At this point the authorization code is valid.
+
+      IMPORTANT:
+      Do NOT put the client secret or token exchange
+      inside this GitHub Pages file.
+
+      Your backend should receive the code and exchange
+      it with Deriv at:
+
+      https://auth.deriv.com/oauth2/token
+    */
+
+    status.textContent =
+      "Deriv authorization successful. Completing connection...";
+
+    /*
+      Send the authorization code to your backend.
+
+      Replace this URL after your backend is ready.
+    */
+
+    // Example:
+    //
+    // fetch("https://YOUR-BACKEND-DOMAIN.com/auth/deriv", {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   },
+    //   body: JSON.stringify({
+    //     code: code,
+    //     state: returnedState,
+    //     code_verifier:
+    //       sessionStorage.getItem("deriv_code_verifier")
+    //   })
+    // });
+
+  }
+
+
+  /*
+    Run callback detection when the page loads.
+  */
+  handleCallback();
+
+</script>
+
+</body>
+    </html>
