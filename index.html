@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Veytrix TradersHub</title>
+  <title>MTrader - Deriv Trading</title>
 
   <style>
     * {
@@ -15,18 +15,17 @@
 
     body {
       font-family: Arial, sans-serif;
-      background: #0b0f14;
-      color: #ffffff;
+      background: #0b0b0f;
+      color: white;
       min-height: 100vh;
     }
 
     header {
-      width: 100%;
       padding: 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #202631;
+      border-bottom: 1px solid #24242b;
     }
 
     .logo {
@@ -34,449 +33,36 @@
       font-weight: bold;
     }
 
-    .logo span {
-      color: #ff4655;
-    }
-
     nav a {
-      color: #ffffff;
-      text-decoration: none;
-      margin-left: 20px;
-      font-size: 14px;
-    }
-
-    nav a:hover {
-      color: #ff4655;
-    }
-
-    .hero {
-      min-height: 75vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 40px 20px;
-    }
-
-    .hero-box {
-      max-width: 700px;
-    }
-
-    .hero h1 {
-      font-size: 46px;
-      margin-bottom: 20px;
-    }
-
-    .hero h1 span {
-      color: #ff4655;
-    }
-
-    .hero p {
-      color: #aab2bf;
-      line-height: 1.7;
-      margin-bottom: 30px;
-      font-size: 17px;
-    }
-
-    .connect-btn {
-      border: none;
-      background: #ff4655;
       color: white;
-      padding: 15px 30px;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
+      text-decoration: none;
+      margin-left: 18px;
     }
 
-    .connect-btn:hover {
-      background: #e93848;
-    }
-
-    .status {
-      margin-top: 25px;
-      color: #aab2bf;
-      min-height: 25px;
-    }
-
-    footer {
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 70px 20px;
       text-align: center;
-      padding: 25px 15px;
-      border-top: 1px solid #202631;
-      color: #777f8c;
-      font-size: 13px;
     }
 
-    .error {
-      color: #ff6673;
+    h1 {
+      font-size: 42px;
+      margin-bottom: 18px;
     }
 
-    .success {
-      color: #39d98a;
-    }
-  </style>
-</head>
-
-<body>
-
-  <header>
-    <div class="logo">
-      <span>Veytrix</span> TradersHub
-    </div>
-
-    <nav>
-      <a href="/">Home</a>
-      <a href="#services">Services</a>
-      <a href="#about">About</a>
-    </nav>
-  </header>
-
-
-  <main>
-
-    <section class="hero">
-
-      <div class="hero-box">
-
-        <h1>
-          Welcome to <span>Veytrix TradersHub</span>
-        </h1>
-
-        <p>
-          Connect your Deriv account securely through the
-          Veytrix TradersHub platform.
-        </p>
-
-        <button
-          id="connectButton"
-          class="connect-btn"
-          onclick="connectDeriv()">
-          Connect with Deriv
-        </button>
-
-        <div id="status" class="status"></div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-
-  <footer>
-    © 2026 Veytrix TradersHub. All rights reserved.
-    <br><br>
-    Trading involves risk. The website provides education information only.
-  </footer>
-
-
-<script>
-
-  /*
-   * ==========================================
-   * VEYTRIX TRADERSHUB - DERIV OAUTH
-   * ==========================================
-   */
-
-  const CLIENT_ID = "34hKmGeuybw1jpVCYc004";
-
-  const REDIRECT_URI =
-    "https://mtrader.online/auth/success";
-
-  const OAUTH_URL =
-    "https://auth.deriv.com/oauth2/auth";
-
-
-  /*
-   * Convert bytes to Base64URL
-   */
-  function base64UrlEncode(buffer) {
-
-    return btoa(
-      String.fromCharCode(...new Uint8Array(buffer))
-    )
-      .replace(/\+/g, "-")
-      .replace(/\//g, "_")
-      .replace(/=+$/, "");
-  }
-
-
-  /*
-   * Generate PKCE verifier
-   */
-  function generateCodeVerifier() {
-
-    const array =
-      crypto.getRandomValues(new Uint8Array(64));
-
-    const characters =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
-      "abcdefghijklmnopqrstuvwxyz" +
-      "0123456789-._~";
-
-    let verifier = "";
-
-    for (let i = 0; i < array.length; i++) {
-      verifier +=
-        characters[array[i] % characters.length];
+    p {
+      color: #b9b9c2;
+      line-height: 1.6;
+      margin-bottom: 30px;
     }
 
-    return verifier;
-  }
-
-
-  /*
-   * Create SHA-256 challenge
-   */
-  async function createCodeChallenge(verifier) {
-
-    const data =
-      new TextEncoder().encode(verifier);
-
-    const hash =
-      await crypto.subtle.digest("SHA-256", data);
-
-    return base64UrlEncode(hash);
-  }
-
-
-  /*
-   * Generate random OAuth state
-   */
-  function generateState() {
-
-    const array =
-      crypto.getRandomValues(new Uint8Array(32));
-
-    return Array.from(array)
-      .map(byte => byte.toString(16).padStart(2, "0"))
-      .join("");
-  }
-
-
-  /*
-   * CONNECT TO DERIV
-   */
-  async function connectDeriv() {
-
-    const button =
-      document.getElementById("connectButton");
-
-    const status =
-      document.getElementById("status");
-
-    try {
-
-      button.disabled = true;
-
-      status.textContent =
-        "Preparing secure Deriv connection...";
-
-      /*
-       * Create PKCE values
-       */
-      const codeVerifier =
-        generateCodeVerifier();
-
-      const codeChallenge =
-        await createCodeChallenge(codeVerifier);
-
-      const state =
-        generateState();
-
-
-      /*
-       * Save values so they survive
-       * the Deriv redirect.
-       */
-      sessionStorage.setItem(
-        "deriv_code_verifier",
-        codeVerifier
-      );
-
-      sessionStorage.setItem(
-        "deriv_oauth_state",
-        state
-      );
-
-
-      /*
-       * Build Deriv OAuth URL
-       */
-      const authUrl =
-        new URL(OAUTH_URL);
-
-      authUrl.searchParams.set(
-        "response_type",
-        "code"
-      );
-
-      authUrl.searchParams.set(
-        "client_id",
-        CLIENT_ID
-      );
-
-      authUrl.searchParams.set(
-        "redirect_uri",
-        REDIRECT_URI
-      );
-
-      authUrl.searchParams.set(
-        "scope",
-        "trade"
-      );
-
-      authUrl.searchParams.set(
-        "state",
-        state
-      );
-
-      authUrl.searchParams.set(
-        "code_challenge",
-        codeChallenge
-      );
-
-      authUrl.searchParams.set(
-        "code_challenge_method",
-        "S256"
-      );
-
-
-      /*
-       * Send user to Deriv.
-       */
-      window.location.href =
-        authUrl.toString();
-
-    } catch (error) {
-
-      console.error(error);
-
-      status.innerHTML =
-        '<span class="error">' +
-        'Unable to start Deriv connection.' +
-        '</span>';
-
-      button.disabled = false;
-    }
-  }
-
-
-  /*
-   * HANDLE RETURN FROM DERIV
-   */
-  async function handleDerivCallback() {
-
-    const params =
-      new URLSearchParams(
-        window.location.search
-      );
-
-    const code =
-      params.get("code");
-
-    const returnedState =
-      params.get("state");
-
-    const error =
-      params.get("error");
-
-
-    /*
-     * Nothing to process if this
-     * isn't the OAuth callback.
-     */
-    if (!code && !error) {
-      return;
-    }
-
-
-    const status =
-      document.getElementById("status");
-
-
-    /*
-     * User cancelled or Deriv returned an error.
-     */
-    if (error) {
-
-      status.innerHTML =
-        '<span class="error">' +
-        'Deriv connection was cancelled or failed.' +
-        '</span>';
-
-      return;
-    }
-
-
-    /*
-     * Check OAuth state.
-     */
-    const savedState =
-      sessionStorage.getItem(
-        "deriv_oauth_state"
-      );
-
-    if (
-      !returnedState ||
-      returnedState !== savedState
-    ) {
-
-      status.innerHTML =
-        '<span class="error">' +
-        'Security verification failed.' +
-        '</span>';
-
-      return;
-    }
-
-
-    /*
-     * At this point Deriv has
-     * authenticated the user and
-     * returned an authorization code.
-     *
-     * IMPORTANT:
-     * The code must be exchanged for
-     * an access token by your backend.
-     */
-    status.innerHTML =
-      '<span class="success">' +
-      'Deriv authorization successful.' +
-      '</span>';
-
-
-    /*
-     * Store temporarily for your
-     * backend callback implementation.
-     */
-    sessionStorage.setItem(
-      "deriv_authorization_code",
-      code
-    );
-
-
-    /*
-     * Remove OAuth parameters
-     * from the browser address bar.
-     */
-    window.history.replaceState(
-      {},
-      document.title,
-      REDIRECT_URI
-    );
-  }
-
-
-  /*
-   * Run callback handler when page loads.
-   */
-  window.addEventListener(
-    "DOMContentLoaded",
-    handleDerivCallback
-  );
-
-</script>
-
-</body>
-</html>
+    .connect {
+      display: inline-block;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 10px;
+      background: #ff444f;
+      color: white;
+      font-size: 17px;
+      font
