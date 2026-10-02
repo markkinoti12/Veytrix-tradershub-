@@ -1,1 +1,610 @@
 # Veytrix-tradershub-
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MTrader</title>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+body{
+  font-family:Arial,sans-serif;
+  background:#070d12;
+  color:#fff;
+}
+
+button{
+  font:inherit;
+  cursor:pointer;
+}
+
+header{
+  height:70px;
+  padding:0 20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #172832;
+  background:#090f15;
+}
+
+.logo{
+  font-size:24px;
+  font-weight:900;
+}
+
+.logo span{color:#19b9e8}
+
+.login{
+  border:0;
+  border-radius:10px;
+  padding:13px 22px;
+  color:#fff;
+  font-weight:bold;
+  background:linear-gradient(90deg,#08a879,#08a8df);
+}
+
+.hero{
+  min-height:650px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:40px 20px;
+  background:
+    radial-gradient(circle at center,#06403d 0,#071218 45%,#070d12 75%);
+}
+
+.heroBox{max-width:650px}
+
+.badge{
+  display:inline-block;
+  padding:10px 17px;
+  border:1px solid #126b67;
+  border-radius:30px;
+  color:#32bce8;
+  font-size:12px;
+  font-weight:bold;
+}
+
+h1{
+  margin-top:25px;
+  font-size:52px;
+  line-height:1.05;
+}
+
+h1 span{color:#20b9e9}
+
+.sub{
+  margin:25px auto;
+  max-width:520px;
+  color:#aebbc2;
+  font-size:18px;
+  line-height:1.6;
+}
+
+.start{
+  width:100%;
+  max-width:380px;
+  padding:18px;
+  border:0;
+  border-radius:12px;
+  color:#041015;
+  background:linear-gradient(90deg,#08a97e,#12b2e5);
+  font-size:17px;
+  font-weight:900;
+}
+
+.signup{
+  margin-top:12px;
+  width:100%;
+  max-width:380px;
+  padding:18px;
+  border:0;
+  border-radius:12px;
+  background:#fff;
+  color:#111;
+  font-weight:900;
+}
+
+#app{
+  display:none;
+  min-height:100vh;
+  background:#f4f6f7;
+  color:#161b1f;
+}
+
+.appHead{
+  height:70px;
+  padding:0 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:#fff;
+  border-bottom:1px solid #ddd;
+}
+
+.appLogo{
+  color:#10a9d9;
+  font-size:22px;
+  font-weight:900;
+}
+
+.balance{
+  color:#1596a2;
+  font-weight:900;
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  background:#101923;
+}
+
+.tab{
+  padding:17px 5px;
+  border:0;
+  color:#fff;
+  background:transparent;
+  font-weight:bold;
+}
+
+.tab.active{background:#10a8df}
+
+.workspace{padding:16px}
+
+.card{
+  background:#fff;
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:15px;
+  box-shadow:0 2px 9px #ddd;
+}
+
+.market{
+  font-size:20px;
+  font-weight:900;
+}
+
+.price{
+  margin-top:7px;
+  color:#6d777d;
+}
+
+.chart{
+  height:280px;
+  position:relative;
+  overflow:hidden;
+  background:
+    linear-gradient(#e2e5e7 1px,transparent 1px),
+    linear-gradient(90deg,#e2e5e7 1px,transparent 1px);
+  background-size:25% 25%;
+}
+
+.line{
+  position:absolute;
+  width:100%;
+  height:3px;
+  top:50%;
+  background:#16a9df;
+  transform:rotate(-4deg);
+}
+
+.actions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.trade{
+  padding:20px;
+  border:0;
+  border-radius:10px;
+  color:#fff;
+  font-size:17px;
+  font-weight:900;
+}
+
+.over{background:#35afb1}
+.under{background:#e7464b}
+
+.status{
+  padding:12px;
+  border-radius:8px;
+  background:#edf7fa;
+  color:#147b92;
+}
+
+@media(max-width:600px){
+  h1{font-size:43px}
+  .tabs{overflow-x:auto}
+  .tab{min-width:110px}
+}
+</style>
+</head>
+
+<body>
+
+<div id="landing">
+
+<header>
+  <div class="logo">M<span>TRADER</span></div>
+  <button class="login" onclick="login()">Log In</button>
+</header>
+
+<section class="hero">
+
+<div class="heroBox">
+
+<div class="badge">
+DERIV TRADING WORKSPACE
+</div>
+
+<h1>
+Trade with <span>better</span><br>
+structure
+</h1>
+
+<p class="sub">
+Connect your Deriv account and access your
+MTrader workspace through your authorised Deriv
+application.
+</p>
+
+<button class="start" onclick="login()">
+Log in and Trade
+</button>
+
+<button class="signup" onclick="signup()">
+Create Free Account
+</button>
+
+</div>
+
+</section>
+
+</div>
+
+
+<div id="app">
+
+<header class="appHead">
+  <div class="appLogo">MTRADER</div>
+  <div class="balance" id="balance">Connecting...</div>
+</header>
+
+<div class="tabs">
+
+<button class="tab active">Quick Bot</button>
+<button class="tab">Signal AI</button>
+<button class="tab">Bulk Trader</button>
+<button class="tab">Manual Trader</button>
+
+</div>
+
+<div class="workspace">
+
+<div class="card">
+
+<div class="market">
+Volatility 100 (1s)
+</div>
+
+<div class="price" id="price">
+Waiting for Deriv data...
+</div>
+
+</div>
+
+<div class="card chart">
+<div class="line"></div>
+</div>
+
+<div class="card">
+
+<h3>Manual Trader</h3>
+
+<br>
+
+<div class="status" id="status">
+Authorising your Deriv account...
+</div>
+
+<br>
+
+<div class="actions">
+
+<button class="trade over">
+↑ Over
+</button>
+
+<button class="trade under">
+↓ Under
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+const CLIENT_ID =
+"34hKmGeuybw1jpVCYcQ04";
+
+const REDIRECT_URI =
+"https://mtrader.online/auth/success";
+
+const AUTH_URL =
+"https://auth.deriv.com/oauth2/auth";
+
+
+function randomString(length=64){
+
+  const chars =
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
+
+  const values =
+  crypto.getRandomValues(new Uint8Array(length));
+
+  return Array.from(values)
+    .map(v => chars[v % chars.length])
+    .join("");
+}
+
+
+async function sha256(value){
+
+  const hash =
+    await crypto.subtle.digest(
+      "SHA-256",
+      new TextEncoder().encode(value)
+    );
+
+  return btoa(
+    String.fromCharCode(...new Uint8Array(hash))
+  )
+  .replace(/\+/g,"-")
+  .replace(/\//g,"_")
+  .replace(/=+$/,"");
+}
+
+
+async function login(){
+
+  const verifier =
+    randomString(64);
+
+  const challenge =
+    await sha256(verifier);
+
+  const state =
+    randomString(32);
+
+  sessionStorage.setItem(
+    "mtrader_verifier",
+    verifier
+  );
+
+  sessionStorage.setItem(
+    "mtrader_state",
+    state
+  );
+
+  const url =
+    new URL(AUTH_URL);
+
+  url.searchParams.set(
+    "response_type",
+    "code"
+  );
+
+  url.searchParams.set(
+    "client_id",
+    CLIENT_ID
+  );
+
+  url.searchParams.set(
+    "redirect_uri",
+    REDIRECT_URI
+  );
+
+  url.searchParams.set(
+    "scope",
+    "trade"
+  );
+
+  url.searchParams.set(
+    "state",
+    state
+  );
+
+  url.searchParams.set(
+    "code_challenge",
+    challenge
+  );
+
+  url.searchParams.set(
+    "code_challenge_method",
+    "S256"
+  );
+
+  location.href =
+    url.toString();
+}
+
+
+async function signup(){
+
+  const verifier =
+    randomString(64);
+
+  const challenge =
+    await sha256(verifier);
+
+  const state =
+    randomString(32);
+
+  sessionStorage.setItem(
+    "mtrader_verifier",
+    verifier
+  );
+
+  sessionStorage.setItem(
+    "mtrader_state",
+    state
+  );
+
+  const url =
+    new URL(AUTH_URL);
+
+  url.searchParams.set(
+    "response_type",
+    "code"
+  );
+
+  url.searchParams.set(
+    "client_id",
+    CLIENT_ID
+  );
+
+  url.searchParams.set(
+    "redirect_uri",
+    REDIRECT_URI
+  );
+
+  url.searchParams.set(
+    "scope",
+    "trade"
+  );
+
+  url.searchParams.set(
+    "state",
+    state
+  );
+
+  url.searchParams.set(
+    "code_challenge",
+    challenge
+  );
+
+  url.searchParams.set(
+    "code_challenge_method",
+    "S256"
+  );
+
+  url.searchParams.set(
+    "prompt",
+    "registration"
+  );
+
+  location.href =
+    url.toString();
+}
+
+
+function showWorkspace(){
+
+  document.getElementById(
+    "landing"
+  ).style.display = "none";
+
+  document.getElementById(
+    "app"
+  ).style.display = "block";
+}
+
+
+/*
+Callback handling.
+
+The actual authorization-code exchange must be
+performed by your backend. The GitHub Pages site
+must NOT contain a client secret.
+*/
+
+function callbackMessage(){
+
+  const params =
+    new URLSearchParams(
+      location.search
+    );
+
+  const error =
+    params.get("error");
+
+  if(error){
+
+    alert(
+      "Deriv authorization was cancelled."
+    );
+
+    return;
+  }
+
+  const code =
+    params.get("code");
+
+  if(!code) return;
+
+  const state =
+    params.get("state");
+
+  const savedState =
+    sessionStorage.getItem(
+      "mtrader_state"
+    );
+
+  if(
+    !state ||
+    !savedState ||
+    state !== savedState
+  ){
+
+    alert(
+      "Security verification failed."
+    );
+
+    return;
+  }
+
+  showWorkspace();
+
+  document.getElementById(
+    "status"
+  ).textContent =
+    "Authorization received. Connecting to MTrader...";
+
+  /*
+  IMPORTANT:
+  Send the code + original verifier to your
+  backend here.
+
+  Example backend endpoint:
+
+  POST /oauth/exchange
+
+  {
+    code: code,
+    code_verifier:
+      sessionStorage.getItem("mtrader_verifier")
+  }
+
+  The backend exchanges these with Deriv.
+  */
+
+}
+
+callbackMessage();
+
+</script>
+
+</body>
+  </html>
