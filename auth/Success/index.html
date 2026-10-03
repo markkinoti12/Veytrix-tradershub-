@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veytrix Tradershub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #e9edf1; --panel: #f9fafb; --ink: #14202b; --muted: #5d6b79; --line: #cfd7df;
+    --up: #0b8f7d; --down: #e03a45; --brand: #ff444f; --focus: #1f6fe5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1a22; --panel: #16242e; --ink: #e8eef3; --muted: #94a5b3; --line: #2a3d4b; --up: #2fd0b9; --down: #ff6b74; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { background: var(--bg); color: var(--ink); font: 400 15px/1.5 Figtree, system-ui, sans-serif; min-height: 100%; }
+  button, input, select { font: inherit; color: inherit; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--panel); }
+  .logo { font: 700 20px 'Bricolage Grotesque', sans-serif; letter-spacing: -.01em; }
+  .logo i { font-style: normal; color: var(--brand); }
+  .acct { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .acct select { padding: 8px 10px; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; }
+  .bal { font: 700 18px 'Bricolage Grotesque', sans-serif; }
+  .btn { border: 0; border-radius: 8px; padding: 10px 16px; font-weight: 600; cursor: pointer; background: var(--ink); color: var(--bg); }
+  .btn.login { background: var(--brand); color: #fff; }
+  .btn.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  main { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr); gap: 16px; padding: 16px 20px 40px; max-width: 1100px; margin: 0 auto; }
+  @media (max-width: 800px) { main { grid-template-columns: 1fr; padding: 12px; } }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 18px; }
+  h2 { margin: 0 0 12px; font: 700 15px 'Bricolage Grotesque', sans-serif; color: var(--muted); }
+  .market { display: flex; justify-content: space-between; align-items: flex-end; gap: 12px; flex-wrap: wrap; }
+  .market select { padding: 8px 10px; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; }
+  .price { font: 700 clamp(40px, 9vw, 68px)/1 'Bricolage Grotesque', sans-serif; letter-spacing: -.03em; font-variant-numeric: tabular-nums; transition: color .15s; }
+  .price.up { color: var(--up); } .price.down { color: var(--down); }
+  canvas { width: 100%; height: 220px; display: block; margin-top: 14px; }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 12px 0 4px; }
+  input[type=number] { width: 100%; padding: 10px; border: 1px solid var(--line); background: var(--bg); border-radius: 8px; }
+  .quote { margin: 14px 0; padding: 12px; border-radius: 8px; background: var(--bg); display: flex; justify-content: space-between; font-variant-numeric: tabular-nums; }
+  .quote b { font: 700 18px 'Bricolage Grotesque', sans-serif; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .buy-up { background: var(--up); color: #fff; } .buy-down { background: var(--down); color: #fff; }
+  .note { font-size: 13px; color: var(--muted); margin: 10px 0 0; }
+  .status { font-size: 13px; color: var(--muted); }
+  ul { list-style: none; margin: 0; padding: 0; }
+  li { display: flex; justify-content: space-between; gap: 10px; padding: 9px 0; border-top: 1px solid var(--line); font-size: 14px; }
+  li:first-child { border-top: 0; }
+  .win { color: var(--up); font-weight: 600; } .loss { color: var(--down); font-weight: 600; }
+  .err { color: var(--down); font-size: 13px; margin-top: 8px; min-height: 1.2em; }
+  .span2 { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">Veytrix <i>tradershub</i></div>
+  <div class="acct" id="acct">
+    <span class="status" id="connStatus">Connecting to markets…</span>
+    <button class="btn login" id="loginBtn">Log in with Deriv</button>
+  </div>
+</header>
+
+<main>
+  <section>
+    <div class="market">
+      <div>
+        <h2>Live price</h2>
+        <div class="price" id="price">—</div>
+      </div>
+      <select id="symbol" aria-label="Market">
+        <option value="R_10">Volatility 10</option>
+        <option value="R_25">Volatility 25</option>
+        <option value="R_50">Volatility 50</option>
+        <option value="R_75">Volatility 75</option>
+        <option value="R_100" selected>Volatility 100</option>
+        <option value="1HZ100V">Volatility 100 (1s)</option>
+      </select>
+    </div>
+    <canvas id="chart" aria-label="Recent price ticks"></canvas>
+  </section>
+
+  <section>
+    <h2>Trade</h2>
+    <div class="status" id="tradeHint">Log in to place trades.</div>
+    <label for="stake">Stake</label>
+    <input type="number" id="stake" value="10" min="1" step="1">
+    <label for="ticks">Duration (ticks)</label>
+    <input type="number" id="ticks" value="5" min="1" max="10" step="1">
+    <div class="quote"><span>Payout</span><b id="payout">—</b></div>
+    <div class="pair">
+      <button class="btn buy-up" id="buyUp" disabled>Rise</button>
+      <button class="btn buy-down" id="buyDown" disabled>Fall</button>
+    </div>
+    <div class="err" id="err" role="alert"></div>
+    <p class="note">Start on a demo account. Trading carries risk of losing your stake.</p>
+  </section>
+
+  <section class="span2">
+    <h2>Your trades this session</h2>
+    <ul id="trades"><li><span class="status">No trades yet.</span></li></ul>
+  </section>
+</main>
+
+<script>
+// ====== CONFIG ======
+const APP_ID = "34hKmGeuybw1jpVCYcQ04";                    // copy it from the dashboard if any character is wrong
+const REDIRECT_URI = "https://mtrader.online/auth/success"; // must match the Redirect URL in your Deriv app
+const API = "https://api.derivws.com";
+const AUTH = "https://auth.deriv.com/oauth2";
+const PUBLIC_WS = "wss://api.derivws.com/trading/v1/options/ws/public";
+// =====================
+
+const $ = (id) => document.getElementById(id);
+const store = sessionStorage;
+let pub, trade, accounts = [], current = null, currency = "USD";
+let ticks = [], lastPrice = null, proposalId = {}, reqId = 1, openContracts = {};
+
+/* ---------- OAuth 2.0 + PKCE ---------- */
+const b64url = (buf) => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+const rand = (n = 48) => b64url(crypto.getRandomValues(new Uint8Array(n)));
+
+async function login() {
+  const verifier = rand(64), state = rand(16);
+  const challenge = b64url(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier)));
+  store.setItem("pkce_verifier", verifier);
+  store.setItem("oauth_state", state);
+  const p = new URLSearchParams({
+    response_type: "code", client_id: APP_ID, redirect_uri: REDIRECT_URI,
+    scope: "trade", state, code_challenge: challenge, code_challenge_method: "S256"
+  });
+  location.href = `${AUTH}/auth?${p}`;
+}
+
+async function handleCallback() {
+  const q = new URLSearchParams(location.search);
+  if (!q.has("code") && !q.has("error")) return;
+  history.replaceState({}, "", location.pathname);
+  if (q.has("error")) return showErr("Login failed: " + (q.get("error_description") || q.get("error")));
+  if (q.get("state") !== store.getItem("oauth_state")) return showErr("Login failed: state mismatch. Try again.");
+  const res = await fetch(`${AUTH}/token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      grant_type: "authorization_code", client_id: APP_ID, code: q.get("code"),
+      code_verifier: store.getItem("pkce_verifier"), redirect_uri: REDIRECT_URI
+    })
+  }).catch(() => null);
+  const data = res && await res.json().catch(() => null);
+  if (!data || !data.access_token) return showErr("Token exchange failed. If this is a CORS error, do the exchange on your server.");
+  store.setItem("access_token", data.access_token);
+  store.removeItem("pkce_verifier"); store.removeItem("oauth_state");
+}
+
+const authHeaders = () => ({ "Deriv-App-ID": APP_ID, "Authorization": `Bearer ${store.getItem("access_token")}` });
+
+function logout() { store.clear(); location.reload(); }
+
+/* ---------- Accounts + authenticated socket ---------- */
+async function loadAccounts() {
+  const res = await fetch(`${API}/trading/v1/options/accounts`, { headers: authHeaders() });
+  if (!res.ok) { store.removeItem("access_token"); throw new Error("Session expired. Log in again."); }
+  const json = await res.json();
+  const list = json.data || json.accounts || json;
+  accounts = (Array.isArray(list) ? list : []).map(a => ({
+    id: a.account_id || a.id, type: (a.account_type || a.type || "").toLowerCase(),
+    balance: a.balance, currency: a.currency || "USD"
+  }));
+  if (!accounts.length) throw new Error("No options accounts found on this Deriv login.");
+  renderAccounts();
+  await connectTrade(accounts.find(a => a.type.includes("demo")) || accounts[0]);
+}
+
+function renderAccounts() {
+  const box = $("acct");
+  box.innerHTML = "";
+  const sel = document.createElement("select");
+  sel.setAttribute("aria-label", "Account");
+  accounts.forEach(a => { const o = document.createElement("option"); o.value = a.id; o.textContent = `${a.type || "account"} · ${a.id}`; sel.appendChild(o); });
+  sel.onchange = () => connectTrade(accounts.find(a => a.id === sel.value));
+  const bal = document.createElement("span"); bal.className = "bal"; bal.id = "bal";
+  const out = document.createElement("button"); out.className = "btn ghost"; out.textContent = "Log out"; out.onclick = logout;
+  box.append(sel, bal, out);
+}
+
+async function connectTrade(acc) {
+  current = acc; currency = acc.currency;
+  if (trade) { trade.onclose = null; trade.close(); }
+  $("tradeHint").textContent = "Connecting account…";
+  setTradeEnabled(false);
+  const res = await fetch(`${API}/trading/v1/options/accounts/${acc.id}/otp`, { method: "POST", headers: authHeaders() });
+  const json = await res.json().catch(() => ({}));
+  const url = json.data && json.data.url;
+  if (!url) return showErr("Could not open a trading session for this account.");
+  trade = new WebSocket(url);
+  trade.onopen = () => {
+    $("tradeHint").textContent = `Trading on ${acc.type || "account"} ${acc.id}`;
+    send(trade, { balance: 1, subscribe: 1 });
+    setTradeEnabled(true); requestProposals();
+  };
+  trade.onmessage = (e) => onTradeMsg(JSON.parse(e.data));
+  trade.onclose = () => { setTradeEnabled(false); $("tradeHint").textContent = "Disconnected. Reload to reconnect."; };
+}
+
+const send = (ws, obj) => ws && ws.readyState === 1 && ws.send(JSON.stringify({ ...obj, req_id: reqId++ }));
+const setTradeEnabled = (on) => { $("buyUp").disabled = $("buyDown").disabled = !on; };
+
+/* ---------- Trading ---------- */
+function requestProposals() {
+  if (!trade || trade.readyState !== 1) return;
+  send(trade, { forget_all: "proposal" });
+  proposalId = {};
+  ["CALL", "PUT"].forEach(type => send(trade, {
+    proposal: 1, subscribe: 1, amount: +$("stake").value || 1, basis: "stake", contract_type: type,
+    currency, duration: +$("ticks").value || 5, duration_unit: "t", underlying_symbol: $("symbol").value, symbol: $("symbol").value
+  }));
+}
+
+function onTradeMsg(m) {
+  if (m.error) return showErr(m.error.message || "Request failed.");
+  $("err").textContent = "";
+  if (m.msg_type === "balance" && m.balance) $("bal").textContent = `${(+m.balance.balance).toFixed(2)} ${m.balance.currency || currency}`;
+  if (m.msg_type === "proposal" && m.proposal) {
+    const t = m.echo_req.contract_type; proposalId[t] = m.proposal;
+    if (t === "CALL") $("payout").textContent = `${(+m.proposal.payout).toFixed(2)} ${currency}`;
+  }
+  if (m.msg_type === "buy" && m.buy) {
+    addTrade(m.buy.contract_id, `${m.echo_req.parameters ? "" : ""}Contract ${m.buy.contract_id}`, "open");
+    send(trade, { proposal_open_contract: 1, contract_id: m.buy.contract_id, subscribe: 1 });
+  }
+  if (m.msg_type === "proposal_open_contract" && m.proposal_open_contract) {
+    const c = m.proposal_open_contract;
+    if (c.is_sold) { setTrade(c.contract_id, +c.profit); send(trade, { forget: m.subscription && m.subscription.id }); }
+  }
+}
+
+function placeTrade(type) {
+  const p = proposalId[type];
+  if (!p) return showErr("Waiting for a price quote. Try again in a moment.");
+  send(trade, { buy: p.id, price: +$("stake").value });
+}
+
+function addTrade(id, label, state) {
+  const ul = $("trades");
+  if (ul.querySelector(".status")) ul.innerHTML = "";
+  const li = document.createElement("li"); li.id = "t" + id;
+  li.innerHTML = "<span></span><span class='status'>Running…</span>";
+  li.firstChild.textContent = label;
+  ul.prepend(li);
+}
+function setTrade(id, profit) {
+  const li = $("t" + id); if (!li) return;
+  const s = li.lastChild; s.className = profit >= 0 ? "win" : "loss";
+  s.textContent = `${profit >= 0 ? "Won" : "Lost"} ${Math.abs(profit).toFixed(2)} ${currency}`;
+}
+
+/* ---------- Public market data (no login needed) ---------- */
+function connectPublic() {
+  pub = new WebSocket(PUBLIC_WS);
+  pub.onopen = () => { $("connStatus").textContent = "Markets live"; subscribeTicks(); };
+  pub.onmessage = (e) => {
+    const m = JSON.parse(e.data);
+    if (m.tick) onTick(+m.tick.quote);
+  };
+  pub.onclose = () => { $("connStatus").textContent = "Reconnecting…"; setTimeout(connectPublic, 2000); };
+}
+function subscribeTicks() {
+  ticks = []; lastPrice = null;
+  send(pub, { forget_all: "ticks" });
+  send(pub, { ticks: $("symbol").value, subscribe: 1 });
+}
+function onTick(q) {
+  const el = $("price");
+  el.textContent = q.toFixed(2);
+  el.className = "price " + (lastPrice == null ? "" : q > lastPrice ? "up" : q < lastPrice ? "down" : "");
+  lastPrice = q; ticks.push(q); if (ticks.length > 80) ticks.shift();
+  draw();
+}
+
+function draw() {
+  const c = $("chart"), dpr = devicePixelRatio || 1;
+  const w = c.clientWidth, h = c.clientHeight;
+  c.width = w * dpr; c.height = h * dpr;
+  const g = c.getContext("2d"); g.scale(dpr, dpr);
+  if (ticks.length < 2) return;
+  const min = Math.min(...ticks), max = Math.max(...ticks), pad = (max - min) * .15 || 1;
+  const x = (i) => (i / (ticks.length - 1)) * w, y = (v) => h - ((v - (min - pad)) / (max - min + pad * 2)) * h;
+  const css = getComputedStyle(document.documentElement);
+  g.strokeStyle = css.getPropertyValue("--ink"); g.lineWidth = 2; g.lineJoin = "round";
+  g.beginPath(); ticks.forEach((v, i) => i ? g.lineTo(x(i), y(v)) : g.moveTo(x(i), y(v))); g.stroke();
+  g.fillStyle = css.getPropertyValue("--brand");
+  g.beginPath(); g.arc(x(ticks.length - 1), y(ticks[ticks.length - 1]), 4, 0, 7); g.fill();
+}
+
+const showErr = (t) => { $("err").textContent = t; };
+
+/* ---------- Boot ---------- */
+$("loginBtn").onclick = login;
+$("symbol").onchange = () => { subscribeTicks(); requestProposals(); };
+$("stake").oninput = $("ticks").oninput = requestProposals;
+$("buyUp").onclick = () => placeTrade("CALL");
+$("buyDown").onclick = () => placeTrade("PUT");
+addEventListener("resize", draw);
+
+(async () => {
+  connectPublic();
+  await handleCallback();
+  if (store.getItem("access_token")) {
+    try { await loadAccounts(); } catch (e) { showErr(e.message); }
+  }
+})();
+</script>
+</body>
+</html>
