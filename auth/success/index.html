@@ -235,16 +235,19 @@ canvas{width:100%;height:190px;display:block}
 const CONFIG = {
   BRAND: 'TickDesk',
   // App ID from developers.deriv.com (type: OAuth). Legacy app IDs won't work.
-  CLIENT_ID: 'YOUR_APP_ID',
+  CLIENT_ID: '34hKmGeuybw1jpVCYcQ04',
   // Optional: your Deriv affiliate/partner sign-up link
   SIGNUP_URL: 'https://deriv.com',
-  SCOPE: 'trade account_manage',
+  SCOPE: 'trade',
   AUTH_URL:  'https://auth.deriv.com/oauth2/auth',
   TOKEN_URL: 'https://auth.deriv.com/oauth2/token',
   API_BASE:  'https://api.derivws.com',
   PUBLIC_WS: 'wss://api.derivws.com/trading/v1/options/ws/public',
   // Must be whitelisted EXACTLY in your Deriv app's redirect URLs:
-  REDIRECT_URI: location.origin + location.pathname,
+  // Where Deriv sends the user back after login. Register this EXACT URL in your Deriv app.
+  // Default: the site root. If your Deriv app uses /auth/success instead, change it to
+  // location.origin + '/auth/success' and upload auth/success/index.html too.
+  REDIRECT_URI: location.origin + '/auth/success',
   DEFAULT_SYMBOL: '1HZ100V',
   FALLBACK_MARKETS: [
     ['Volatility (1s)', [['1HZ10V','Volatility 10 (1s) Index'],['1HZ25V','Volatility 25 (1s) Index'],['1HZ50V','Volatility 50 (1s) Index'],['1HZ75V','Volatility 75 (1s) Index'],['1HZ100V','Volatility 100 (1s) Index']]],
@@ -283,7 +286,7 @@ async function login(){
 async function handleCallback(){
   const p = new URLSearchParams(location.search);
   if (!p.has('code') && !p.has('error')) return;
-  history.replaceState({}, '', CONFIG.REDIRECT_URI);
+  history.replaceState({}, '', location.origin + '/');
   if (p.has('error')) return alert('Login failed: ' + p.get('error'));
   if (p.get('state') !== S.getItem('st')) return alert('Login failed: state mismatch');
   try{
@@ -297,7 +300,7 @@ async function handleCallback(){
   S.removeItem('pkce'); S.removeItem('st');
 }
 const token = () => { const t = S.getItem('tok'); if (!t) return null; if (Date.now() > +S.getItem('exp')) { S.clear(); return null; } return t; };
-const logout = () => { S.clear(); location.href = CONFIG.REDIRECT_URI; };
+const logout = () => { S.clear(); location.href = location.origin + '/'; };
 
 async function api(path, opts={}){
   const r = await fetch(CONFIG.API_BASE + path, {...opts, headers:{Authorization:'Bearer ' + token(), 'Content-Type':'application/json'}});
@@ -353,13 +356,4 @@ function onTick(t){
   state.digits.push(state.lastDigit); if (state.digits.length > 100) state.digits.shift();
   $('price').textContent = str;
   drawChart(); if (state.tab === 'stats') renderBars();
-  botOnTick();
-}
-
-async function loadMarkets(){
-  let groups = null;
-  try{
-    const m = await rpc(pubWs, {active_symbols:'brief', product_type:'basic'});
-    const by = {};
-    (m.active_symbols || []).forEach(s => {
-      const id = s.underlying_symbol || s.symbol;
+  botOnTick
