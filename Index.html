@@ -1,610 +1,171 @@
-# Veytrix-tradershub-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MTrader</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Veytrix Tradershub</title>
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
-
-body{
-  font-family:Arial,sans-serif;
-  background:#070d12;
-  color:#fff;
-}
-
-button{
-  font:inherit;
-  cursor:pointer;
-}
-
-header{
-  height:70px;
-  padding:0 20px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  border-bottom:1px solid #172832;
-  background:#090f15;
-}
-
-.logo{
-  font-size:24px;
-  font-weight:900;
-}
-
-.logo span{color:#19b9e8}
-
-.login{
-  border:0;
-  border-radius:10px;
-  padding:13px 22px;
-  color:#fff;
-  font-weight:bold;
-  background:linear-gradient(90deg,#08a879,#08a8df);
-}
-
-.hero{
-  min-height:650px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  padding:40px 20px;
-  background:
-    radial-gradient(circle at center,#06403d 0,#071218 45%,#070d12 75%);
-}
-
-.heroBox{max-width:650px}
-
-.badge{
-  display:inline-block;
-  padding:10px 17px;
-  border:1px solid #126b67;
-  border-radius:30px;
-  color:#32bce8;
-  font-size:12px;
-  font-weight:bold;
-}
-
-h1{
-  margin-top:25px;
-  font-size:52px;
-  line-height:1.05;
-}
-
-h1 span{color:#20b9e9}
-
-.sub{
-  margin:25px auto;
-  max-width:520px;
-  color:#aebbc2;
-  font-size:18px;
-  line-height:1.6;
-}
-
-.start{
-  width:100%;
-  max-width:380px;
-  padding:18px;
-  border:0;
-  border-radius:12px;
-  color:#041015;
-  background:linear-gradient(90deg,#08a97e,#12b2e5);
-  font-size:17px;
-  font-weight:900;
-}
-
-.signup{
-  margin-top:12px;
-  width:100%;
-  max-width:380px;
-  padding:18px;
-  border:0;
-  border-radius:12px;
-  background:#fff;
-  color:#111;
-  font-weight:900;
-}
-
-#app{
-  display:none;
-  min-height:100vh;
-  background:#f4f6f7;
-  color:#161b1f;
-}
-
-.appHead{
-  height:70px;
-  padding:0 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:#fff;
-  border-bottom:1px solid #ddd;
-}
-
-.appLogo{
-  color:#10a9d9;
-  font-size:22px;
-  font-weight:900;
-}
-
-.balance{
-  color:#1596a2;
-  font-weight:900;
-}
-
-.tabs{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  background:#101923;
-}
-
-.tab{
-  padding:17px 5px;
-  border:0;
-  color:#fff;
-  background:transparent;
-  font-weight:bold;
-}
-
-.tab.active{background:#10a8df}
-
-.workspace{padding:16px}
-
-.card{
-  background:#fff;
-  border-radius:12px;
-  padding:18px;
-  margin-bottom:15px;
-  box-shadow:0 2px 9px #ddd;
-}
-
-.market{
-  font-size:20px;
-  font-weight:900;
-}
-
-.price{
-  margin-top:7px;
-  color:#6d777d;
-}
-
-.chart{
-  height:280px;
-  position:relative;
-  overflow:hidden;
-  background:
-    linear-gradient(#e2e5e7 1px,transparent 1px),
-    linear-gradient(90deg,#e2e5e7 1px,transparent 1px);
-  background-size:25% 25%;
-}
-
-.line{
-  position:absolute;
-  width:100%;
-  height:3px;
-  top:50%;
-  background:#16a9df;
-  transform:rotate(-4deg);
-}
-
-.actions{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-}
-
-.trade{
-  padding:20px;
-  border:0;
-  border-radius:10px;
-  color:#fff;
-  font-size:17px;
-  font-weight:900;
-}
-
-.over{background:#35afb1}
-.under{background:#e7464b}
-
-.status{
-  padding:12px;
-  border-radius:8px;
-  background:#edf7fa;
-  color:#147b92;
-}
-
-@media(max-width:600px){
-  h1{font-size:43px}
-  .tabs{overflow-x:auto}
-  .tab{min-width:110px}
-}
+  :root{--bg:#0e1117;--card:#171b24;--line:#262c3a;--tx:#e8eaf0;--mut:#8b93a7;--red:#ff444f;--grn:#2ecc71}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,sans-serif;padding:16px;max-width:520px;margin:auto}
+  h1{font-size:20px;margin:0 0 12px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px}
+  button{background:var(--red);color:#fff;border:0;border-radius:8px;padding:12px;font-size:15px;width:100%;cursor:pointer}
+  button.g{background:var(--grn)} button.s{background:#2a3142}
+  select,input{width:100%;padding:10px;margin:4px 0 10px;background:#0e1117;color:var(--tx);border:1px solid var(--line);border-radius:8px;font-size:15px}
+  label{font-size:12px;color:var(--mut)}
+  .row{display:flex;gap:8px}.row>*{flex:1}
+  .price{font-size:30px;font-weight:700}
+  .mut{color:var(--mut);font-size:13px}
+  pre{background:#0e1117;padding:8px;border-radius:8px;max-height:160px;overflow:auto;font-size:11px;white-space:pre-wrap}
+  .hide{display:none}
 </style>
 </head>
-
 <body>
+<h1>Veytrix Tradershub</h1>
 
-<div id="landing">
-
-<header>
-  <div class="logo">M<span>TRADER</span></div>
-  <button class="login" onclick="login()">Log In</button>
-</header>
-
-<section class="hero">
-
-<div class="heroBox">
-
-<div class="badge">
-DERIV TRADING WORKSPACE
+<div id="login" class="card">
+  <p class="mut">Log in with your Deriv account to trade.</p>
+  <button onclick="login()">Log in with Deriv</button>
 </div>
 
-<h1>
-Trade with <span>better</span><br>
-structure
-</h1>
+<div id="app" class="hide">
+  <div class="card">
+    <label>Account</label>
+    <select id="acct" onchange="connect()"></select>
+    <div class="mut">Balance: <b id="bal">-</b></div>
+    <button class="s" style="margin-top:10px" onclick="logout()">Log out</button>
+  </div>
 
-<p class="sub">
-Connect your Deriv account and access your
-MTrader workspace through your authorised Deriv
-application.
-</p>
+  <div class="card">
+    <label>Market (symbol)</label>
+    <select id="sym" onchange="subTicks()">
+      <option value="R_10">Volatility 10</option>
+      <option value="R_25">Volatility 25</option>
+      <option value="R_50">Volatility 50</option>
+      <option value="R_75">Volatility 75</option>
+      <option value="R_100" selected>Volatility 100</option>
+    </select>
+    <div class="price" id="price">-</div>
+  </div>
 
-<button class="start" onclick="login()">
-Log in and Trade
-</button>
+  <div class="card">
+    <div class="row">
+      <div><label>Stake</label><input id="stake" type="number" value="1" min="0.35" step="0.01"></div>
+      <div><label>Ticks</label><input id="dur" type="number" value="5" min="1" max="10"></div>
+    </div>
+    <div class="row">
+      <button class="g" onclick="trade('CALL')">Rise</button>
+      <button onclick="trade('PUT')">Fall</button>
+    </div>
+    <p class="mut" id="msg"></p>
+  </div>
 
-<button class="signup" onclick="signup()">
-Create Free Account
-</button>
-
+  <div class="card"><label>Log</label><pre id="log"></pre></div>
 </div>
-
-</section>
-
-</div>
-
-
-<div id="app">
-
-<header class="appHead">
-  <div class="appLogo">MTRADER</div>
-  <div class="balance" id="balance">Connecting...</div>
-</header>
-
-<div class="tabs">
-
-<button class="tab active">Quick Bot</button>
-<button class="tab">Signal AI</button>
-<button class="tab">Bulk Trader</button>
-<button class="tab">Manual Trader</button>
-
-</div>
-
-<div class="workspace">
-
-<div class="card">
-
-<div class="market">
-Volatility 100 (1s)
-</div>
-
-<div class="price" id="price">
-Waiting for Deriv data...
-</div>
-
-</div>
-
-<div class="card chart">
-<div class="line"></div>
-</div>
-
-<div class="card">
-
-<h3>Manual Trader</h3>
-
-<br>
-
-<div class="status" id="status">
-Authorising your Deriv account...
-</div>
-
-<br>
-
-<div class="actions">
-
-<button class="trade over">
-↑ Over
-</button>
-
-<button class="trade under">
-↓ Under
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
 
 <script>
+// ====== CONFIG ======
+const APP_ID = "34hKmGeuybw1jpVCYcQ04";
+const REDIRECT_URI = "https://mtrader.online/auth/success";
+const AUTH_URL = "https://auth.deriv.com/oauth2/auth";
+const TOKEN_URL = "https://auth.deriv.com/oauth2/token";
+const API = "https://api.derivws.com";
+const SCOPE = "trade account_manage"; // adjust to scopes enabled on your app
+// ====================
 
-const CLIENT_ID =
-"34hKmGeuybw1jpVCYcQ04";
+const $ = id => document.getElementById(id);
+const log = m => { $("log").textContent = (typeof m==="string"?m:JSON.stringify(m)) + "\n" + $("log").textContent; };
+let ws = null, accounts = [], pending = {};
 
-const REDIRECT_URI =
-"https://mtrader.online/auth/success";
-
-const AUTH_URL =
-"https://auth.deriv.com/oauth2/auth";
-
-
-function randomString(length=64){
-
-  const chars =
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~";
-
-  const values =
-  crypto.getRandomValues(new Uint8Array(length));
-
-  return Array.from(values)
-    .map(v => chars[v % chars.length])
-    .join("");
-}
-
-
-async function sha256(value){
-
-  const hash =
-    await crypto.subtle.digest(
-      "SHA-256",
-      new TextEncoder().encode(value)
-    );
-
-  return btoa(
-    String.fromCharCode(...new Uint8Array(hash))
-  )
-  .replace(/\+/g,"-")
-  .replace(/\//g,"_")
-  .replace(/=+$/,"");
-}
-
+// ---- PKCE helpers ----
+const b64url = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const rand = n => b64url(crypto.getRandomValues(new Uint8Array(n)));
+async function challenge(v){ return b64url(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(v))); }
 
 async function login(){
-
-  const verifier =
-    randomString(64);
-
-  const challenge =
-    await sha256(verifier);
-
-  const state =
-    randomString(32);
-
-  sessionStorage.setItem(
-    "mtrader_verifier",
-    verifier
-  );
-
-  sessionStorage.setItem(
-    "mtrader_state",
-    state
-  );
-
-  const url =
-    new URL(AUTH_URL);
-
-  url.searchParams.set(
-    "response_type",
-    "code"
-  );
-
-  url.searchParams.set(
-    "client_id",
-    CLIENT_ID
-  );
-
-  url.searchParams.set(
-    "redirect_uri",
-    REDIRECT_URI
-  );
-
-  url.searchParams.set(
-    "scope",
-    "trade"
-  );
-
-  url.searchParams.set(
-    "state",
-    state
-  );
-
-  url.searchParams.set(
-    "code_challenge",
-    challenge
-  );
-
-  url.searchParams.set(
-    "code_challenge_method",
-    "S256"
-  );
-
-  location.href =
-    url.toString();
+  const verifier = rand(48), state = rand(16);
+  sessionStorage.setItem("pkce_verifier", verifier);
+  sessionStorage.setItem("pkce_state", state);
+  const p = new URLSearchParams({
+    response_type:"code", client_id:APP_ID, redirect_uri:REDIRECT_URI,
+    scope:SCOPE, state, code_challenge:await challenge(verifier), code_challenge_method:"S256"
+  });
+  location.href = AUTH_URL + "?" + p;
 }
 
-
-async function signup(){
-
-  const verifier =
-    randomString(64);
-
-  const challenge =
-    await sha256(verifier);
-
-  const state =
-    randomString(32);
-
-  sessionStorage.setItem(
-    "mtrader_verifier",
-    verifier
-  );
-
-  sessionStorage.setItem(
-    "mtrader_state",
-    state
-  );
-
-  const url =
-    new URL(AUTH_URL);
-
-  url.searchParams.set(
-    "response_type",
-    "code"
-  );
-
-  url.searchParams.set(
-    "client_id",
-    CLIENT_ID
-  );
-
-  url.searchParams.set(
-    "redirect_uri",
-    REDIRECT_URI
-  );
-
-  url.searchParams.set(
-    "scope",
-    "trade"
-  );
-
-  url.searchParams.set(
-    "state",
-    state
-  );
-
-  url.searchParams.set(
-    "code_challenge",
-    challenge
-  );
-
-  url.searchParams.set(
-    "code_challenge_method",
-    "S256"
-  );
-
-  url.searchParams.set(
-    "prompt",
-    "registration"
-  );
-
-  location.href =
-    url.toString();
+async function handleCallback(){
+  const q = new URLSearchParams(location.search);
+  if(!q.get("code")) return false;
+  if(q.get("state") !== sessionStorage.getItem("pkce_state")){ alert("State mismatch"); return false; }
+  const body = new URLSearchParams({
+    grant_type:"authorization_code", client_id:APP_ID, code:q.get("code"),
+    code_verifier:sessionStorage.getItem("pkce_verifier"), redirect_uri:REDIRECT_URI
+  });
+  const r = await fetch(TOKEN_URL, {method:"POST", headers:{"Content-Type":"application/x-www-form-urlencoded"}, body});
+  const j = await r.json();
+  if(!j.access_token){ alert("Login failed: " + JSON.stringify(j)); return false; }
+  sessionStorage.setItem("access_token", j.access_token);
+  sessionStorage.removeItem("pkce_verifier"); sessionStorage.removeItem("pkce_state");
+  history.replaceState({}, "", "/");
+  return true;
 }
 
+function logout(){ sessionStorage.clear(); if(ws) ws.close(); location.href="/"; }
 
-function showWorkspace(){
+const headers = () => ({"Deriv-App-ID":APP_ID, "Authorization":"Bearer "+sessionStorage.getItem("access_token")});
 
-  document.getElementById(
-    "landing"
-  ).style.display = "none";
-
-  document.getElementById(
-    "app"
-  ).style.display = "block";
+async function loadAccounts(){
+  const r = await fetch(API+"/trading/v1/options/accounts", {headers:headers()});
+  const j = await r.json(); log(j);
+  accounts = j.data || [];
+  $("acct").innerHTML = accounts.map(a =>
+    `<option value="${a.account_id}">${a.account_id} (${a.account_type||""} ${a.currency||""})</option>`).join("");
 }
 
+async function connect(){
+  if(ws) ws.close();
+  const id = $("acct").value; if(!id) return;
+  const r = await fetch(`${API}/trading/v1/options/accounts/${id}/otp`, {method:"POST", headers:headers()});
+  const j = await r.json(); log("OTP ok: " + !!(j.data&&j.data.url));
+  if(!j.data) return;
+  ws = new WebSocket(j.data.url);
+  ws.onopen = () => { send({balance:1, subscribe:1}); subTicks(); };
+  ws.onmessage = e => onMsg(JSON.parse(e.data));
+  ws.onclose = () => log("socket closed");
+}
 
-/*
-Callback handling.
+let reqId = 1;
+function send(o){ o.req_id = reqId++; ws.send(JSON.stringify(o)); return o.req_id; }
 
-The actual authorization-code exchange must be
-performed by your backend. The GitHub Pages site
-must NOT contain a client secret.
-*/
-
-function callbackMessage(){
-
-  const params =
-    new URLSearchParams(
-      location.search
-    );
-
-  const error =
-    params.get("error");
-
-  if(error){
-
-    alert(
-      "Deriv authorization was cancelled."
-    );
-
-    return;
+function onMsg(m){
+  if(m.error){ $("msg").textContent = m.error.message; log(m); return; }
+  if(m.msg_type==="balance") $("bal").textContent = m.balance.balance + " " + m.balance.currency;
+  else if(m.msg_type==="tick") $("price").textContent = m.tick.quote;
+  else if(m.msg_type==="proposal"){
+    send({buy:m.proposal.id, price:+$("stake").value});
+    $("msg").textContent = "Proposal: payout " + m.proposal.payout;
   }
-
-  const code =
-    params.get("code");
-
-  if(!code) return;
-
-  const state =
-    params.get("state");
-
-  const savedState =
-    sessionStorage.getItem(
-      "mtrader_state"
-    );
-
-  if(
-    !state ||
-    !savedState ||
-    state !== savedState
-  ){
-
-    alert(
-      "Security verification failed."
-    );
-
-    return;
-  }
-
-  showWorkspace();
-
-  document.getElementById(
-    "status"
-  ).textContent =
-    "Authorization received. Connecting to MTrader...";
-
-  /*
-  IMPORTANT:
-  Send the code + original verifier to your
-  backend here.
-
-  Example backend endpoint:
-
-  POST /oauth/exchange
-
-  {
-    code: code,
-    code_verifier:
-      sessionStorage.getItem("mtrader_verifier")
-  }
-
-  The backend exchanges these with Deriv.
-  */
-
+  else if(m.msg_type==="buy") $("msg").textContent = "Bought. Contract " + m.buy.contract_id;
+  log(m.msg_type);
 }
 
-callbackMessage();
+function subTicks(){ if(ws&&ws.readyState===1){ send({forget_all:"ticks"}); send({ticks:$("sym").value, subscribe:1}); } }
 
+function trade(type){
+  $("msg").textContent = "Requesting...";
+  send({proposal:1, amount:+$("stake").value, basis:"stake", contract_type:type,
+        currency:(accounts.find(a=>a.account_id===$("acct").value)||{}).currency||"USD",
+        duration:+$("dur").value, duration_unit:"t", symbol:$("sym").value});
+}
+
+(async () => {
+  if(location.search.includes("code=")) await handleCallback();
+  if(sessionStorage.getItem("access_token")){
+    $("login").classList.add("hide"); $("app").classList.remove("hide");
+    try{ await loadAccounts(); await connect(); }catch(e){ log(String(e)); }
+  }
+})();
 </script>
-
 </body>
-  </html>
+</html>
