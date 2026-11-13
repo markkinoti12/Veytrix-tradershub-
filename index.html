@@ -1,353 +1,266 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Traders Hub</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Veytrix TradersHub</title>
 <style>
-:root{--bg:#0b1118;--card:#131c27;--line:#223041;--txt:#e6edf3;--mut:#8b9bb0;--up:#14b8a6;--dn:#ef4444;--acc:#6366f1}
+:root{--bg:#0b1018;--panel:#131a26;--line:#223047;--tx:#e6ebf3;--mut:#8493a8;--acc:#f2b84b;--up:#1fa38a;--dn:#d6485c;--in:#0e141e}
 *{box-sizing:border-box}
-body{margin:0 auto;background:var(--bg);color:var(--txt);font:15px system-ui,sans-serif;padding:12px;max-width:520px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:12px}
-.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}
-input,select,button{background:#0e1620;color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:10px;font:inherit;width:100%}
-button{cursor:pointer;font-weight:600}
-label{display:block;color:var(--mut);font-size:12px;margin:6px 0 4px}
-.bar{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
-.dot{width:9px;height:9px;border-radius:50%;background:var(--dn);display:inline-block;margin-right:6px}.dot.on{background:var(--up)}
-.tick{font-size:28px;font-weight:700;text-align:center;margin:4px 0}
-.digits{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:10px 0 14px}
-.d{aspect-ratio:1;border-radius:50%;border:3px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;font-weight:700;position:relative;cursor:pointer}
-.d small{font-size:10px;color:var(--mut);font-weight:500}
-.d.hi{border-color:var(--up)}.d.lo{border-color:var(--dn)}.d.sel{background:var(--acc)}
-.d.cur::after{content:"";position:absolute;bottom:-9px;border:5px solid transparent;border-bottom-color:#fff}
-.trade{display:flex;gap:8px;margin-top:10px}
-.trade button{padding:14px 8px;font-size:16px}.trade small{display:block;font-weight:500;opacity:.85}
-.over{background:var(--up);border-color:var(--up);color:#00110f}.under{background:var(--dn);border-color:var(--dn);color:#fff}
-.primary{background:var(--acc);border-color:var(--acc)}
-.log div{padding:8px 0;border-bottom:1px solid var(--line);font-size:13px;display:flex;justify-content:space-between}
-.win{color:var(--up)}.loss{color:var(--dn)}
-.note{color:var(--mut);font-size:12px;line-height:1.4}
-button:disabled{opacity:.45;cursor:not-allowed}
-.hide{display:none}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-bottom:40px}
+header{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 16px;border-bottom:1px solid var(--line)}
+.brand{font-weight:700;font-size:19px;letter-spacing:.2px;margin-right:auto}
+.brand span{color:var(--acc)}
+#dot{width:10px;height:10px;border-radius:50%;background:var(--dn);display:inline-block;margin-right:6px}
+#dot.mid{background:var(--acc)}#dot.on{background:var(--up)}
+main{max-width:760px;margin:0 auto;padding:14px 16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+h2{font-size:17px;margin:0 0 10px}
+label{display:block;color:var(--mut);font-size:14px;margin-bottom:4px}
+input,select{width:100%;background:var(--in);color:var(--tx);border:1px solid var(--line);border-radius:10px;padding:12px;font:inherit}
+input:focus,select:focus,button:focus-visible,.bar:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:12px 16px;color:#fff;background:#3b4a66}
+button.pri{background:var(--acc);color:#1a1405;font-weight:700}
+button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;gap:12px}.row>*{flex:1;min-width:0}
+nav{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;margin-bottom:2px}
+nav button{background:var(--panel);border:1px solid var(--line);white-space:nowrap;color:var(--tx);font-weight:600}
+nav button.on{background:var(--acc);color:#1a1405;border-color:var(--acc)}
 .tab{display:none}.tab.on{display:block}
-.nav{display:flex;gap:6px;overflow-x:auto;margin-bottom:12px;padding-bottom:4px}
-.nav button{width:auto;white-space:nowrap;padding:9px 12px;font-size:13px}
-.nav button.on{background:var(--acc);border-color:var(--acc)}
-.stat{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
-.stat b{font-size:20px;display:block}
-canvas{width:100%;height:220px;display:block}
-.bot{border:1px solid var(--line);border-radius:10px;padding:10px;margin-top:8px}
-.bot p{margin:4px 0}
+.px{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums;margin:6px 0 10px}
+.dg{display:grid;grid-template-columns:repeat(10,1fr);gap:5px;align-items:end;height:150px;margin:8px 0}
+.bar{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:3px;cursor:pointer;height:100%;background:none;padding:0;border-radius:6px;color:var(--tx)}
+.bar i{display:block;width:100%;background:#3b4a66;border-radius:5px 5px 0 0;min-height:3px}
+.bar.hi i{background:var(--up)}.bar.lo i{background:var(--dn)}
+.bar.sel{outline:2px solid var(--acc)}
+.bar b{font-size:14px}.bar small{font-size:10px;color:var(--mut)}
+.pay{display:flex;flex-direction:column;align-items:center;gap:2px;padding:14px 8px}
+.pay small{opacity:.85}
+.over{background:var(--up)}.under{background:var(--dn)}
+.mut{color:var(--mut);font-size:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat b{display:block;font-size:24px;font-variant-numeric:tabular-nums}
+table{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+td,th{padding:8px 4px;border-bottom:1px solid var(--line);text-align:left;font-weight:400}
+th{color:var(--mut)}
+.w{color:var(--up)}.l{color:var(--dn)}
+canvas{width:100%;height:240px;display:block}
+details{margin-top:12px;color:var(--mut)}summary{cursor:pointer}
+#toast{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2a364d;padding:12px 16px;border-radius:10px;max-width:90%;display:none;z-index:9}
+@media (prefers-reduced-motion:no-preference){.px{transition:color .2s}}
 </style>
 </head>
 <body>
+<header>
+  <div class="brand">Veytrix <span>TradersHub</span></div>
+  <div><i id="dot"></i><span id="stat">Disconnected</span></div>
+  <select id="acct" style="width:auto;display:none" aria-label="Account"></select>
+  <b id="bal" class="mut"></b>
+  <button id="out" style="display:none">Log out</button>
+</header>
+<main>
+  <section class="card" id="login">
+    <h2>Connect your Deriv account</h2>
+    <p class="mut" style="margin-top:0">Prices work without logging in. Log in to trade. Start on your demo account.</p>
+    <button class="pri" id="inBtn" style="width:100%">Log in with Deriv</button>
+    <details><summary>Use a personal access token instead</summary>
+      <label for="pat" style="margin-top:10px">Token from developers.deriv.com (stays in this tab only)</label>
+      <div class="row"><input id="pat" type="password" autocomplete="off"><button id="patBtn" style="flex:0 0 auto">Connect</button></div>
+    </details>
+  </section>
 
-<div class="card">
-  <div class="bar"><div><span class="dot" id="dot"></span><span id="status">Disconnected</span></div>
-  <div id="bal" style="font-weight:700">—</div></div>
-  <label>App ID</label>
-  <input id="appid" value="34hKmGeuybw1jpVCYcQ04">
-  <button id="login" class="primary" style="margin-top:8px">Log in with Deriv</button>
-  <div id="acctBox" class="hide">
-    <label>Account</label><select id="acct"></select>
-  </div>
-  <details style="margin-top:8px"><summary class="note">Use a personal access token instead (testing)</summary>
-    <input id="pat" type="password" placeholder="PAT with trade scope" style="margin-top:6px">
-    <button id="patGo" style="margin-top:6px">Load accounts</button>
-  </details>
-  <p class="note">Login redirects to <span id="redir"></span>. Host this file at that exact URL so the login can return here. Start on the demo account.</p>
-</div>
+  <nav id="nav">
+    <button data-t="dash" class="on">Dashboard</button><button data-t="trade">Manual Trader</button><button data-t="chart">Charts</button><button data-t="bot">Bot Builder</button>
+  </nav>
 
-<div class="nav" id="nav">
-  <button data-t="dash">Dashboard</button><button data-t="manual" class="on">Manual Trader</button>
-  <button data-t="chart">Charts</button><button data-t="bot">Bot Builder</button>
-  <button data-t="free">Free Bots</button><button data-t="copy">Copy Trading</button>
-</div>
+  <section class="tab on" id="dash">
+    <div class="card stats">
+      <div class="stat"><span class="mut">Balance</span><b id="sBal">–</b></div>
+      <div class="stat"><span class="mut">Session profit</span><b id="sPl">0.00</b></div>
+      <div class="stat"><span class="mut">Trades</span><b id="sN">0</b></div>
+      <div class="stat"><span class="mut">Win rate</span><b id="sWr">–</b></div>
+    </div>
+    <div class="card">
+      <h2>Your commission</h2>
+      <p class="mut" style="margin:0">Customers who log in through this site trade under your app, so Deriv adds your 3% markup to their trades. Your earnings are reported in your developers.deriv.com dashboard, not on this page. Customers pay that markup in the price they see, so keep it visible to them.</p>
+    </div>
+  </section>
 
-<div id="t-dash" class="tab">
-  <div class="card"><b>Session</b>
-    <div class="stat" style="margin-top:8px"><div><b id="sW">0</b><span class="note">Wins</span></div>
-    <div><b id="sL">0</b><span class="note">Losses</span></div><div><b id="sP">0.00</b><span class="note">Profit/Loss</span></div></div>
-  </div>
-  <div class="card note">Log in above, pick a demo account, then use Manual Trader or load a bot from Free Bots. Stats reset when you reload.</div>
-</div>
+  <section class="tab" id="trade">
+    <div class="card">
+      <label for="mkt">Market</label>
+      <select id="mkt"></select>
+      <div class="px" id="px">–</div>
+      <div class="row"><div><label for="win">Digit window</label><select id="win"><option>25</option><option>50</option><option selected>100</option><option>200</option></select></div><div><label>Barrier</label><div class="px" style="margin:0;font-size:22px" id="bar">5</div></div></div>
+      <div class="dg" id="dg"></div>
+      <p class="mut" style="margin:0" id="dgNote">Tap a digit to set the barrier. Green is the most frequent last digit, red the least.</p>
+    </div>
+    <div class="card">
+      <h2>Over / Under</h2>
+      <div class="row"><div><label for="stake">Stake</label><input id="stake" type="number" min="0.35" step="0.01" value="1"></div><div><label for="dur">Duration (ticks)</label><input id="dur" type="number" min="1" max="10" value="1"></div></div>
+      <div class="row" style="margin-top:12px"><button class="pay over" id="bOver"><b>Over</b><small id="pOver">Payout –</small></button><button class="pay under" id="bUnder"><b>Under</b><small id="pUnder">Payout –</small></button></div>
+    </div>
+    <div class="card"><h2>Trades</h2><table><thead><tr><th>Type</th><th>Stake</th><th>Result</th></tr></thead><tbody id="tr"><tr><td colspan="3" class="mut">No trades yet.</td></tr></tbody></table></div>
+  </section>
 
-<div id="t-manual" class="tab on">
-<div class="card">
-  <label>Market</label><select id="market"></select>
-  <div class="tick" id="tick">—</div>
-  <div class="digits" id="digits"></div>
-  <p class="note" style="text-align:center">Last-digit distribution over the last <span id="n">0</span> ticks. Tap a digit to set the barrier.</p>
-</div>
+  <section class="tab" id="chart">
+    <div class="card"><h2 id="cT">Last 100 ticks</h2><canvas id="cv" aria-label="Tick chart"></canvas></div>
+  </section>
 
-<div class="card">
-  <b>Over / Under</b>
-  <div class="row">
-    <div><label>Stake</label><input id="stake" type="number" min="0.35" step="0.01" value="1"></div>
-    <div><label>Duration (ticks)</label><input id="dur" type="number" min="1" max="10" value="1"></div>
-  </div>
-  <div class="trade">
-    <button class="over" id="bOver" disabled>Over<small id="pOver">Payout —</small></button>
-    <button class="under" id="bUnder" disabled>Under<small id="pUnder">Payout —</small></button>
-  </div>
-</div>
+  <section class="tab" id="bot">
+    <div class="card">
+      <h2>Bot Builder</h2>
+      <p class="mut" style="margin-top:0">Repeats the Over/Under trade with the market, barrier, stake and duration set in Manual Trader. It stops at your limits. It never raises the stake after a loss.</p>
+      <div class="row"><div><label for="bSide">Trade</label><select id="bSide"><option value="DIGITOVER">Over</option><option value="DIGITUNDER">Under</option></select></div><div><label for="bMax">Max trades</label><input id="bMax" type="number" min="1" value="10"></div></div>
+      <div class="row" style="margin:12px 0"><div><label for="bSl">Stop loss</label><input id="bSl" type="number" min="0.01" step="0.01" value="5"></div><div><label for="bTp">Take profit</label><input id="bTp" type="number" min="0.01" step="0.01" value="5"></div></div>
+      <div class="row"><button class="pri" id="bGo">Start bot</button><button id="bStop" disabled>Stop</button></div>
+      <p class="mut" id="bLog" style="margin-bottom:0">Idle.</p>
+    </div>
+  </section>
 
-</div>
-
-<div id="t-chart" class="tab"><div class="card"><b>Live ticks</b> <span class="note" id="cSym"></span><canvas id="cv"></canvas></div></div>
-
-<div id="t-bot" class="tab"><div class="card"><b>Bot Builder</b>
-  <p class="note">Rule-based auto trader on the market chosen in Manual Trader (<span id="botSym"></span>). It runs only while this page stays open.</p>
-  <div class="row"><div><label>Type</label><select id="bType"><option value="DIGITOVER">Over</option><option value="DIGITUNDER">Under</option></select></div>
-  <div><label>Barrier</label><input id="bBar" type="number" min="0" max="9" value="5"></div>
-  <div><label>Ticks</label><input id="bDur" type="number" min="1" max="10" value="1"></div></div>
-  <div class="row"><div><label>Enter when</label><select id="bCond"><option value="tick">Every tick</option><option value="digit">Last digit equals</option></select></div>
-  <div><label>Digit</label><input id="bDigit" type="number" min="0" max="9" value="9"></div></div>
-  <div class="row"><div><label>Stake</label><input id="bStake" type="number" min="0.35" step="0.01" value="1"></div>
-  <div><label>Loss multiplier</label><input id="bMart" type="number" min="1" step="0.1" value="1"></div>
-  <div><label>Max stake</label><input id="bMax" type="number" value="10"></div></div>
-  <div class="row"><div><label>Take profit</label><input id="bTP" type="number" value="5"></div>
-  <div><label>Stop loss</label><input id="bSL" type="number" value="10"></div></div>
-  <button id="botBtn" class="primary" style="margin-top:10px">Run bot</button>
-  <p class="note" id="botInfo">Bot idle.</p>
-</div></div>
-
-<div id="t-free" class="tab"><div class="card"><b>Free Bots</b>
-  <p class="note">Starter templates. None of them has a proven edge; the markets are random. Test on demo.</p><div id="freeList"></div></div></div>
-
-<div id="t-copy" class="tab"><div class="card"><b>Copy Trading</b>
-  <p class="note">Not built yet. It needs each follower to give you a personal access token, and the bulk-purchase endpoint of the Deriv API to place one trade across many accounts. Say the word and I'll add it.</p></div></div>
-
-<div class="card"><b>Trades</b><div class="log" id="log"></div></div>
+  <p class="mut">Trading digit contracts carries a high risk of losing your stake. Only trade money you can afford to lose.</p>
+</main>
+<div id="toast" role="status"></div>
 
 <script>
-const REDIRECT = "https://mtrader.online/auth/success";
-const API = "https://mtrader.online/auth/success 
-const PUBLIC_WS = "wss://mtrader.online/auth/success/trading/v1/options/ws/public";
-const MARKETS = {
-  R_10:"Volatility 10 Index", R_25:"Volatility 25 Index", R_50:"Volatility 50 Index", R_75:"Volatility 75 Index", R_100:"Volatility 100 Index",
-  "1HZ10V":"Volatility 10 (1s)", "1HZ25V":"Volatility 25 (1s)", "1HZ50V":"Volatility 50 (1s)", "1HZ75V":"Volatility 75 (1s)", "1HZ100V":"Volatility 100 (1s)"
-};
-const $ = id => document.getElementById(id);
-let ws, authed = false, currency = "USD", symbol = "R_100", pip = 2, digits = [], barrier = 5;
-let proposals = {}, bearer = null, isPat = false;
+const APP_ID="34hKmGeuybw1jpVCYcQ04",REDIRECT="https://mtrader.online/auth/success",API="https://api.derivws.com",
+PUB="wss://api.derivws.com/trading/v1/options/ws/public",TOKEN_URL="https://auth.deriv.com/oauth2/token",
+SYMS=[["R_10","Volatility 10"],["R_25","Volatility 25"],["R_50","Volatility 50"],["R_75","Volatility 75"],["R_100","Volatility 100"],["1HZ10V","Volatility 10 (1s)"],["1HZ25V","Volatility 25 (1s)"],["1HZ50V","Volatility 50 (1s)"],["1HZ75V","Volatility 75 (1s)"],["1HZ100V","Volatility 100 (1s)"]];
+const $=s=>document.querySelector(s);
+const S={sym:"R_100",ticks:[],pip:2,barrier:5,cur:"USD",token:sessionStorage.getItem("tk"),acct:null,pub:null,auth:null,subT:null,trades:[],pl:0,wins:0,wait:{},bot:false};
+let tt;function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";clearTimeout(tt);tt=setTimeout(()=>t.style.display="none",5000)}
+const money=n=>(+n).toFixed(2);
+const isDemo=a=>/demo|VRT|DOT/i.test((a.account_type||a.type||"")+(a.account_id||a.id||""));
 
-$("redir").textContent = REDIRECT;
-$("market").innerHTML = Object.entries(MARKETS).map(([k,v]) => `<option value="${k}">${v}</option>`).join("");
-$("market").value = symbol;
-$("digits").innerHTML = [...Array(10).keys()].map(i => `<div class="d" data-i="${i}">${i}<small>–</small></div>`).join("");
-document.querySelectorAll(".d").forEach(el => el.onclick = () => { barrier = +el.dataset.i; renderDigits(); requestProposals(); });
+/* ---- WebSocket helper: request/response by req_id, plus handlers by msg_type ---- */
+function Sock(url,onopen,onclose){
+  const s={ws:null,id:1,p:{},on:{},
+    send(o){return new Promise((ok,no)=>{if(!s.ws||s.ws.readyState!==1)return no({message:"Not connected"});const r=s.id++;o.req_id=r;s.p[r]={ok,no};s.ws.send(JSON.stringify(o))})},
+    open(){const w=s.ws=new WebSocket(url);w.onopen=()=>onopen(s);w.onclose=()=>{if(s.ws===w){s.ws=null;onclose(s)}};
+      w.onmessage=e=>{const m=JSON.parse(e.data),p=s.p[m.req_id];if(p){delete s.p[m.req_id];m.error?p.no(m.error):p.ok(m)}if(!m.error&&s.on[m.msg_type])s.on[m.msg_type](m)}},
+    close(){const w=s.ws;s.ws=null;if(w)w.close()}};
+  return s}
+function setStatus(){const a=S.auth&&S.auth.ws&&S.auth.ws.readyState===1,p=S.pub&&S.pub.ws&&S.pub.ws.readyState===1;
+  $("#dot").className=a?"on":p?"mid":"";$("#stat").textContent=a?"Connected":p?"Live prices only":"Disconnected"}
 
-const send = o => { if(ws && ws.readyState===1) ws.send(JSON.stringify(o)); };
-const setStatus = (t,on) => { $("status").textContent=t; $("dot").className="dot"+(on?" on":""); };
-function log(t, cls=""){ const d=document.createElement("div"); d.innerHTML=`<span class="${cls}">${t}</span><span class="note">${new Date().toLocaleTimeString()}</span>`; $("log").prepend(d); }
-const setButtons = () => $("bOver").disabled = $("bUnder").disabled = !authed;
+/* ---- Market data (public, no login needed) ---- */
+function startPub(){
+  S.pub=Sock(PUB,()=>{setStatus();loadMarket()},s=>{setStatus();setTimeout(()=>s.open(),2000)});
+  S.pub.on.tick=m=>{const t=m.tick;if(!t||t.symbol!==S.sym)return;S.pip=t.pip_size??S.pip;S.ticks.push(+t.quote);if(S.ticks.length>400)S.ticks.shift();paint()};
+  S.pub.open()}
+async function loadMarket(){
+  const p=S.pub;if(S.subT){p.send({forget:S.subT}).catch(()=>{});S.subT=null}
+  S.ticks=[];paint();
+  try{const h=await p.send({ticks_history:S.sym,count:400,end:"latest",style:"ticks"});
+    S.pip=h.pip_size??2;S.ticks=(h.history.prices||[]).map(Number);paint();
+    const t=await p.send({ticks:S.sym,subscribe:1});S.subT=t.subscription&&t.subscription.id}
+  catch(e){toast("Market data: "+(e.message||"failed"))}
+  quote()}
+const digit=q=>+q.toFixed(S.pip).slice(-1);
+function paint(){
+  if(!S.ticks.length)return;
+  $("#px").textContent=S.ticks[S.ticks.length-1].toFixed(S.pip);
+  const n=+$("#win").value,w=S.ticks.slice(-n),c=Array(10).fill(0);w.forEach(q=>c[digit(q)]++);
+  const mx=Math.max(...c),mn=Math.min(...c);
+  $("#dg").innerHTML=c.map((v,d)=>`<button class="bar${v===mx?" hi":v===mn?" lo":""}${d===S.barrier?" sel":""}" data-d="${d}" aria-label="Digit ${d}, ${(v/w.length*100).toFixed(1)} percent"><small>${(v/w.length*100).toFixed(1)}%</small><i style="height:${Math.max(3,v/mx*100)}%"></i><b>${d}</b></button>`).join("");
+  $("#dgNote").textContent=`Last-digit spread over the last ${w.length} ticks. Tap a digit to set the barrier.`;
+  if($("#chart").classList.contains("on"))drawChart()}
+$("#dg").onclick=e=>{const b=e.target.closest(".bar");if(!b)return;S.barrier=+b.dataset.d;$("#bar").textContent=S.barrier;paint();quote()};
+let qt;function quote(){clearTimeout(qt);qt=setTimeout(async()=>{
+  for(const[k,t]of[["Over","DIGITOVER"],["Under","DIGITUNDER"]]){
+    try{const r=await S.pub.send({proposal:1,amount:+$("#stake").value||1,basis:"stake",contract_type:t,currency:S.cur,duration:+$("#dur").value||1,duration_unit:"t",underlying_symbol:S.sym,barrier:String(S.barrier)});
+      $("#p"+k).textContent="Payout "+money(r.proposal.payout)}
+    catch(e){$("#p"+k).textContent="Not available"}}},350)}
+["stake","dur"].forEach(i=>$("#"+i).oninput=quote);
+$("#win").onchange=paint;
+$("#mkt").innerHTML=SYMS.map(s=>`<option value="${s[0]}"${s[0]===S.sym?" selected":""}>${s[1]}</option>`).join("");
+$("#mkt").onchange=e=>{S.sym=e.target.value;loadMarket()};
 
-/* ---------- WebSocket ---------- */
-function openSocket(url, isAuthed){
-  if(ws){ ws.onclose=null; ws.close(); }
-  authed = false; setButtons(); setStatus("Connecting…", false);
-  ws = new WebSocket(url);
-  ws.onopen = () => {
-    authed = isAuthed; setButtons();
-    setStatus(isAuthed ? "Connected · trading" : "Connected · market data only", true);
-    if(isAuthed) send({balance:1, subscribe:1});
-    loadMarket();
-  };
-  ws.onclose = () => { authed=false; setButtons(); setStatus("Disconnected", false); };
-  ws.onerror = () => setStatus("Connection error", false);
-  ws.onmessage = e => handle(JSON.parse(e.data));
-}
-function loadMarket(){
-  digits = []; renderDigits();
-  send({forget_all:"ticks"});
-  send({ticks_history:symbol, count:1000, end:"latest", style:"ticks"});
-  send({ticks:symbol, subscribe:1});
-  requestProposals();
-}
-const lastDigit = (q,p) => +Number(q).toFixed(p).slice(-1);
-
-function handle(m){
-  if(m.error && m.msg_type==="buy" && bot.on){ bot.busy=false; botStop("Trade rejected: "+(m.error.message||"")); return; }
-  if(m.error){ log(`⚠ ${m.error.message || m.error.code}`, "loss"); return; }
-  switch(m.msg_type){
-    case "balance":
-      currency = m.balance.currency || currency;
-      $("bal").textContent = `${(+m.balance.balance).toFixed(2)} ${currency}`; break;
-    case "history":
-      pip = m.pip_size ?? (String(m.history.prices[0]).split(".")[1]||"").length ?? 2;
-      digits = m.history.prices.map(p => lastDigit(p, pip)); renderDigits(); break;
-    case "tick":
-      if(m.tick.symbol !== symbol) return;
-      onTick(m.tick.quote);
-      pip = m.tick.pip_size ?? pip;
-      $("tick").textContent = Number(m.tick.quote).toFixed(pip);
-      digits.push(lastDigit(m.tick.quote, pip)); if(digits.length>1000) digits.shift();
-      renderDigits(); break;
-    case "proposal": {
-      const t = m.echo_req.contract_type; proposals[t] = m.proposal;
-      $(t==="DIGITOVER"?"pOver":"pUnder").textContent = `Payout ${(+m.proposal.payout).toFixed(2)} ${currency}`; break; }
-    case "buy":
-      if(m.echo_req.passthrough?.bot) botIds.add(m.buy.contract_id);
-      log(`Opened · stake ${(+m.buy.buy_price).toFixed(2)}`);
-      send({proposal_open_contract:1, contract_id:m.buy.contract_id, subscribe:1}); break;
-    case "proposal_open_contract": {
-      const c = m.proposal_open_contract;
-      if(c.is_sold){
-        const p = +c.profit;
-        log(`${c.contract_type==="DIGITOVER"?"Over":"Under"} ${c.barrier} closed · ${p>=0?"+":""}${p.toFixed(2)}`, p>=0?"win":"loss");
-        if(m.subscription?.id) send({forget:m.subscription.id});
-        recordResult(p, c.contract_id);
-      } break; }
-  }
-}
-
-function renderDigits(){
-  const cnt = Array(10).fill(0); digits.forEach(d => cnt[d]++);
-  const tot = digits.length||1, pct = cnt.map(c => c/tot*100);
-  const mx = Math.max(...pct), mn = Math.min(...pct), cur = digits[digits.length-1];
-  $("n").textContent = digits.length;
-  document.querySelectorAll(".d").forEach(el => {
-    const i = +el.dataset.i, has = digits.length>0;
-    el.querySelector("small").textContent = has ? pct[i].toFixed(1)+"%" : "–";
-    el.className = "d"+(has&&pct[i]===mx?" hi":"")+(has&&pct[i]===mn?" lo":"")+(i===barrier?" sel":"")+(i===cur?" cur":"");
-  });
-}
-
-function requestProposals(){
-  proposals = {}; $("pOver").textContent = $("pUnder").textContent = "Payout —";
-  if(!authed) return;
-  const stake = +$("stake").value, dur = +$("dur").value;
-  if(!(stake>0) || !(dur>=1)) return;
-  send({forget_all:"proposal"});
-  ["DIGITOVER","DIGITUNDER"].forEach(t => send({
-    proposal:1, amount:stake, basis:"stake", contract_type:t, currency,
-    duration:dur, duration_unit:"t", underlying_symbol:symbol, barrier:String(barrier)
-  }));
-}
-function buy(t){ const p = proposals[t]; if(p) send({buy:p.id, price:+p.ask_price}); }
-
-/* ---------- OAuth (Authorization Code + PKCE) ---------- */
-const b64url = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
-async function login(){
-  const verifier = b64url(crypto.getRandomValues(new Uint8Array(64)));
-  const challenge = b64url(await crypto.subtle.digest("SHA-256", new TextEncoder().encode(verifier)));
-  const state = b64url(crypto.getRandomValues(new Uint8Array(16)));
-  sessionStorage.setItem("pkce", JSON.stringify({verifier, state, appid:$("appid").value.trim()}));
-  const q = new URLSearchParams({
-    response_type:"code", client_id:$("appid").value.trim(), redirect_uri:REDIRECT,
-    scope:"trade", state, code_challenge:challenge, code_challenge_method:"S256"
-  });
-  location.href = "https://auth.deriv.com/oauth2/auth?"+q;
-}
-async function handleCallback(){
-  const p = new URLSearchParams(location.search);
-  if(!p.get("code")) return false;
-  const saved = JSON.parse(sessionStorage.getItem("pkce")||"null");
-  if(!saved || saved.state !== p.get("state")){ log("⚠ Login state mismatch","loss"); return false; }
-  try{
-    const r = await fetch("https://auth.deriv.com/oauth2/token", {
-      method:"POST", headers:{"Content-Type":"application/x-www-form-urlencoded"},
-      body:new URLSearchParams({grant_type:"authorization_code", client_id:saved.appid, code:p.get("code"),
-        code_verifier:saved.verifier, redirect_uri:REDIRECT})
-    });
-    const j = await r.json();
-    if(!j.access_token) throw new Error(j.error_description || j.error || "No token returned");
-    bearer = j.access_token; isPat = false;
-    history.replaceState(null,"",location.pathname);
-    await loadAccounts(); return true;
-  }catch(e){ log("⚠ Login failed: "+e.message,"loss"); return false; }
-}
-
-/* ---------- Accounts + OTP ---------- */
-const hdr = () => ({Authorization:`Bearer ${bearer}`, ...(isPat?{"Deriv-App-ID":$("appid").value.trim()}:{})});
-async function loadAccounts(){
-  const r = await fetch(`${API}/trading/v1/options/accounts`, {headers:hdr()});
-  const j = await r.json();
-  const list = j.data || j.accounts || [];
-  if(!list.length){ log("No accounts returned: "+JSON.stringify(j).slice(0,120),"loss"); return; }
-  $("acct").innerHTML = list.map(a => {
-    const id = a.account_id ?? a.loginid ?? a.id;
-    const type = a.account_type ?? (String(id).startsWith("VRT")||String(id).startsWith("DEM") ? "demo":"real");
-    return `<option value="${id}" data-cur="${a.currency||"USD"}">${type} · ${id}${a.balance!=null?" · "+a.balance:""}</option>`;
-  }).join("");
-  $("acctBox").classList.remove("hide");
-  const demo = [...$("acct").options].find(o => /demo/i.test(o.textContent)); if(demo) $("acct").value = demo.value;
-  startTrading();
-}
-async function startTrading(){
-  const opt = $("acct").selectedOptions[0]; if(!opt) return;
-  currency = opt.dataset.cur || "USD";
-  try{
-    const r = await fetch(`${API}/trading/v1/options/accounts/${opt.value}/otp`, {method:"POST", headers:hdr()});
-    const j = await r.json();
-    if(!j.data?.url) throw new Error(JSON.stringify(j).slice(0,120));
-    openSocket(j.data.url, true);   // OTP is single-use, valid ~120s: open immediately
-  }catch(e){ log("⚠ OTP failed: "+e.message,"loss"); }
-}
-
-/* ---------- Wiring ---------- */
-$("login").onclick = login;
-$("patGo").onclick = () => { bearer = $("pat").value.trim(); isPat = true; if(bearer) loadAccounts().catch(e => log("⚠ "+e.message,"loss")); };
-$("acct").onchange = startTrading;
-$("market").onchange = e => { symbol = e.target.value; $("tick").textContent="—"; loadMarket(); };
-$("stake").oninput = $("dur").oninput = requestProposals;
-$("bOver").onclick = () => buy("DIGITOVER");
-$("bUnder").onclick = () => buy("DIGITUNDER");
-
-/* ---------- Tabs, stats, chart ---------- */
-document.querySelectorAll("#nav button").forEach(b => b.onclick = () => {
-  document.querySelectorAll("#nav button").forEach(x => x.classList.toggle("on", x===b));
-  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.id==="t-"+b.dataset.t));
-  $("botSym").textContent = $("cSym").textContent = MARKETS[symbol]; drawChart();
-});
-const botIds = new Set(), closed = new Set(); let qs = [];
-let stats = {w:0,l:0,pnl:0}, bot = {on:false,busy:false,stake:1,pnl:0};
-function renderStats(){ $("sW").textContent=stats.w; $("sL").textContent=stats.l; $("sP").textContent=stats.pnl.toFixed(2);
-  if(bot.on) $("botInfo").textContent=`Running · next stake ${bot.stake} · bot P/L ${bot.pnl.toFixed(2)}`; }
-function recordResult(p, id){
-  if(closed.has(id)) return; closed.add(id);
-  p>=0 ? stats.w++ : stats.l++; stats.pnl += p;
-  if(botIds.has(id)){
-    bot.busy = false; bot.pnl += p;
-    bot.stake = p<0 ? +(bot.stake*Number($("bMart").value)).toFixed(2) : Number($("bStake").value);
-    if(bot.pnl >= Number($("bTP").value)) botStop("Take profit reached");
-    else if(bot.pnl <= -Number($("bSL").value)) botStop("Stop loss reached");
-    else if(bot.stake > Number($("bMax").value)) botStop("Max stake exceeded");
-  }
-  renderStats();
-}
-function onTick(q){ qs.push(+q); if(qs.length>120) qs.shift(); drawChart(); botTick(); }
+/* ---- Chart ---- */
 function drawChart(){
-  const c=$("cv"); if(!c.clientWidth || qs.length<2) return;
-  c.width=c.clientWidth; c.height=220; const g=c.getContext("2d");
-  const mn=Math.min(...qs), mx=Math.max(...qs), r=(mx-mn)||1;
-  g.strokeStyle="#14b8a6"; g.lineWidth=2; g.beginPath();
-  qs.forEach((v,i)=>{ const x=i/(qs.length-1)*c.width, y=c.height-10-(v-mn)/r*(c.height-20); i?g.lineTo(x,y):g.moveTo(x,y); });
-  g.stroke();
-}
-function botTick(){
-  if(!bot.on || bot.busy || !authed) return;
-  if($("bCond").value==="digit" && digits[digits.length-1]!==Number($("bDigit").value)) return;
-  bot.busy = true;
-  send({buy:1, price:bot.stake, passthrough:{bot:1}, parameters:{
-    amount:bot.stake, basis:"stake", contract_type:$("bType").value, currency,
-    duration:Number($("bDur").value), duration_unit:"t", underlying_symbol:symbol, barrier:String($("bBar").value)}});
-}
-function botStop(msg){ bot.on=false; bot.busy=false; $("botBtn").textContent="Run bot"; $("botInfo").textContent=msg||"Bot stopped."; log("Bot: "+(msg||"stopped")); }
-$("botBtn").onclick = () => {
-  if(bot.on) return botStop("Stopped by you");
-  if(!authed){ $("botInfo").textContent="Log in and pick an account first."; return; }
-  bot = {on:true, busy:false, stake:Number($("bStake").value), pnl:0};
-  $("botBtn").textContent="Stop bot"; renderStats();
-};
-const FREE = [
-  {n:"Over 2 steady", d:"Over 2 on every tick, flat stake.", t:"DIGITOVER", b:2, c:"tick", g:9, m:1},
-  {n:"Under 7 on a 9", d:"Waits for a last digit of 9, then Under 7.", t:"DIGITUNDER", b:7, c:"digit", g:9, m:1},
-  {n:"Over 4 recovery", d:"Over 4 every tick, stake x2 after a loss (high risk).", t:"DIGITOVER", b:4, c:"tick", g:0, m:2}
-];
-$("freeList").innerHTML = FREE.map((f,i)=>`<div class="bot"><b>${f.n}</b><p class="note">${f.d}</p><button data-i="${i}">Load into Bot Builder</button></div>`).join("");
-document.querySelectorAll("#freeList button").forEach(b => b.onclick = () => {
-  const f = FREE[b.dataset.i];
-  $("bType"
+  const cv=$("#cv"),r=devicePixelRatio||1,w=cv.clientWidth,h=cv.clientHeight;cv.width=w*r;cv.height=h*r;
+  const g=cv.getContext("2d");g.scale(r,r);g.clearRect(0,0,w,h);
+  const d=S.ticks.slice(-100);if(d.length<2)return;
+  const mn=Math.min(...d),mx=Math.max(...d),pad=14,rg=(mx-mn)||1;
+  g.strokeStyle="#f2b84b";g.lineWidth=2;g.beginPath();
+  d.forEach((v,i)=>{const x=pad+i/(d.length-1)*(w-2*pad),y=h-pad-(v-mn)/rg*(h-2*pad);i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke();
+  g.fillStyle="#8493a8";g.font="12px system-ui";g.fillText(mx.toFixed(S.pip),pad,12);g.fillText(mn.toFixed(S.pip),pad,h-2);
+  $("#cT").textContent=SYMS.find(s=>s[0]===S.sym)[1]+": last "+d.length+" ticks"}
+
+/* ---- Login: OAuth2 Authorization Code + PKCE ---- */
+const b64u=b=>btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+const rnd=n=>b64u(crypto.getRandomValues(new Uint8Array(n)));
+$("#inBtn").onclick=async()=>{
+  const v=rnd(48),st=rnd(16);sessionStorage.setItem("pk",v);sessionStorage.setItem("st",st);
+  const ch=b64u(await crypto.subtle.digest("SHA-256",new TextEncoder().encode(v)));
+  location.href=`https://auth.deriv.com/oauth2/auth?response_type=code&client_id=${APP_ID}&redirect_uri=${encodeURIComponent(REDIRECT)}&scope=trade&state=${st}&code_challenge=${ch}&code_challenge_method=S256`};
+async function handleCallback(){
+  const q=new URLSearchParams(location.search);if(!q.has("code")&&!q.has("error"))return;
+  history.replaceState({},"","/");
+  if(q.has("error"))return toast("Login failed: "+(q.get("error_description")||q.get("error")));
+  if(q.get("state")!==sessionStorage.getItem("st"))return toast("Login failed: state mismatch. Try again.");
+  try{const r=await fetch(TOKEN_URL,{method:"POST",headers:{"Content-Type":"application/x-www-form-urlencoded"},
+      body:new URLSearchParams({grant_type:"authorization_code",client_id:APP_ID,code:q.get("code"),code_verifier:sessionStorage.getItem("pk"),redirect_uri:REDIRECT})});
+    const j=await r.json();if(!r.ok||!j.access_token)throw Error(j.error_description||j.error||"token request failed");
+    S.token=j.access_token;sessionStorage.setItem("tk",S.token)}
+  catch(e){toast("Token exchange failed ("+e.message+"). If the browser blocked it, use a personal access token or move this step to a server.")}}
+$("#patBtn").onclick=()=>{const v=$("#pat").value.trim();if(!v)return;S.token=v;sessionStorage.setItem("tk",v);$("#pat").value="";connectAuth()};
+$("#out").onclick=()=>{sessionStorage.removeItem("tk");S.token=null;if(S.auth)S.auth.close();S.auth=null;S.acct=null;ui();setStatus()};
+const hdr=()=>({Authorization:"Bearer "+S.token,"Deriv-App-ID":APP_ID,"Content-Type":"application/json"});
+async function connectAuth(){
+  try{const r=await fetch(API+"/trading/v1/options/accounts",{headers:hdr()}),j=await r.json();
+    if(!r.ok)throw Error((j.errors&&j.errors[0]&&j.errors[0].message)||j.message||"HTTP "+r.status);
+    const list=j.data||[];if(!list.length)throw Error("No trading accounts found");
+    S.accts=list;const sel=$("#acct");
+    sel.innerHTML=list.map(a=>{const id=a.account_id||a.id;return`<option value="${id}">${isDemo(a)?"Demo":"Real"} ${id}</option>`}).join("");
+    const first=list.find(isDemo)||list[0];sel.value=first.account_id||first.id;ui();openAcct(sel.value)}
+  catch(e){toast("Could not load accounts: "+e.message);if(/401|unauth|token/i.test(e.message))$("#out").click()}}
+$("#acct").onchange=e=>openAcct(e.target.value);
+async function openAcct(id){
+  if(S.auth)S.auth.close();S.acct=id;$("#bal").textContent="";
+  try{const r=await fetch(`${API}/trading/v1/options/accounts/${id}/otp`,{method:"POST",headers:hdr()}),j=await r.json();
+    if(!r.ok||!j.data)throw Error(j.message||"OTP failed ("+r.status+")");
+    const a=S.auth=Sock(j.data.url,s=>{setStatus();s.send({balance:1,subscribe:1}).catch(()=>{})},()=>{setStatus();if(S.token&&S.acct===id)setTimeout(()=>S.token&&openAcct(id),3000)});
+    a.on.balance=m=>{S.cur=m.balance.currency||S.cur;$("#bal").textContent=money(m.balance.balance)+" "+S.cur;$("#sBal").textContent=$("#bal").textContent;quote()};
+    a.on.proposal_open_contract=onContract;a.open()}
+  catch(e){toast("Could not open trading connection: "+e.message)}}
+function ui(){const on=!!S.token;$("#login").style.display=on?"none":"block";$("#out").style.display=on?"":"none";$("#acct").style.display=on?"":"none";if(!on){$("#bal").textContent="";$("#sBal").textContent="–"}}
+
+/* ---- Trading ---- */
+async function trade(type,silent){
+  if(!S.auth||!S.auth.ws)throw Error("Log in first");
+  const stake=+$("#stake").value,dur=+$("#dur").value,acc=S.accts.find(a=>(a.account_id||a.id)===S.acct);
+  if(!(stake>0)||!(dur>0))throw Error("Enter a stake and duration");
+  if(!silent&&acc&&!isDemo(acc)&&!confirm(`Real account: ${type==="DIGITOVER"?"Over":"Under"} ${S.barrier} for ${money(stake)} ${S.cur}?`))throw Error("Cancelled");
+  const r=await S.auth.send({buy:1,price:stake,parameters:{amount:stake,basis:"stake",contract_type:type,currency:S.cur,duration:dur,duration_unit:"t",underlying_symbol:S.sym,barrier:String(S.barrier)}});
+  const t={id:r.buy.contract_id,type,barrier:S.barrier,stake:+r.buy.buy_price||stake,pl:null};
+  S.trades.unshift(t);renderTrades();
+  S.auth.send({proposal_open_contract:1,contract_id:t.id,subscribe:1}).catch(()=>{});return t}
+function onContract(m){
+  const c=m.proposal_open_contract,t=S.trades.find(x=>x.id===c.contract_id);
+  if(!t||t.pl!==null||!(c.is_sold||c.status&&c.status!=="open"))return;
+  t.pl=+c.profit;S.pl+=t.pl;if(t.pl>0)S.wins++;
+  if(m.subscription)S.auth.send({forget:m.subscription.id}).catch(()=>{});
+  renderTrades();if(S.wait[t.id]){S.wait[t.id](t);delete S.wait[t.id]}}
+function renderTrades(){
+  $("#tr").innerHTML=S.trades.slice(0,15).map(t=>`<tr><td>${t.type==="DIGITOVER"?"Over":"Under"} ${t.barrier}</td><td>${money(t.stake)}</td><td class="${t.pl>0?"w":"l"}">${t.pl===null?"Open":(t.pl>0?"+":"")+money(t.pl)}</td></tr>`).join("")||'<tr><td colspan="3" class="mut">No trades yet.</td></tr>';
+  const done=S.trades.filter(t=>t.pl!==null).length;
+  $("#sPl").textContent=(S.pl>0?"+":"")+money(S.pl);$("#sPl").className=S.pl>0?"w":S.pl<0?"l":"";
+  $("#sN").textContent=S.trades.length;$("#sWr").textContent=done?Math.round(S.wins/done*100)+"%":"–"}
+$("#bOver").onclick=()=>trade("DIGITOVER").catch(e=>e.message!=="Cancelled"&&toast(e.message));
+$("#bUnder").onclick=()=>trade("DIGITUNDER").catch(e=>e.message!=="Cancelled"&&toast(e.message));
+
+/* ---- Bot: fixed stake, hard limits ---- */
+function botUI(on){S.bot=on;$("#bGo").disabled=on;$("#bStop").disabled=!on}
+$("#bStop").onclick=()=>{S.bot=false};
+$("#bGo").onclick=async()=>{
+  if(!S.auth||!S.auth.ws)return toast("Log in first");
+  const acc=S.accts.find(a=>(a.account_id||a.id)===S.acct),max=+$("#bMax").value,sl=+$("#bSl").value,tp=+$("#bTp").value,type=$("#bSide").value;
+  if(acc&&!isDemo(acc)&&!confirm(`Run the bot on a REAL account for up to ${max} trades of ${money($("#stake").value)} ${S.cur}?`))return;
+  botUI(true);let n=0,pl=0,why="Stopped.";
+  while(S.bot){
+    if(n>=max){why="Reached max trades.";break}
+    if(pl<=-sl){why="Stop loss hit.";break}
+    if(pl>=tp){why="Take profit hit.";break}
+    try{const t=await trade(type,true);
+      const done=await Promise
