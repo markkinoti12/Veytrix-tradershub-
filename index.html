@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="en">
-<head>
+<head><head>
+  <!-- 1. Error catcher goes FIRST -->
+  <script>
+  window.onerror = function (msg, src, line, col) {
+    alert("Error: " + msg + "\nFile: " + src + "\nLine: " + line);
+  };
+  window.addEventListener("unhandledrejection", function (e) {
+    alert("Promise error: " + (e.reason && e.reason.message || e.reason));
+  });
+  </script>
+
+  <!-- 2. Your existing scripts stay below -->
+  <script src="app.js"></script>
+</head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Veytrix TradersHub</title>
