@@ -1,19 +1,6 @@
 <!doctype html>
 <html lang="en">
-<head><head>
-  <!-- 1. Error catcher goes FIRST -->
-  <script>
-  window.onerror = function (msg, src, line, col) {
-    alert("Error: " + msg + "\nFile: " + src + "\nLine: " + line);
-  };
-  window.addEventListener("unhandledrejection", function (e) {
-    alert("Promise error: " + (e.reason && e.reason.message || e.reason));
-  });
-  </script>
-
-  <!-- 2. Your existing scripts stay below -->
-  <script src="app.js"></script>
-</head>
+<head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Veytrix TradersHub</title>
@@ -133,7 +120,7 @@ details{margin-top:12px;color:var(--mut)}summary{cursor:pointer}
 
 <script>
 const APP_ID="34hKmGeuybw1jpVCYcQ04",REDIRECT="https://mtrader.online/auth/success",API="https://api.derivws.com",
-PUB="wss://api.derivws.com/trading/v1/options/ws/public",TOKEN_URL="https://mtrader/auth/success.deriv.com/oauth2/token",
+PUB="wss://api.derivws.com/trading/v1/options/ws/public",TOKEN_URL="https://auth.deriv.com/oauth2/token",
 SYMS=[["R_10","Volatility 10"],["R_25","Volatility 25"],["R_50","Volatility 50"],["R_75","Volatility 75"],["R_100","Volatility 100"],["1HZ10V","Volatility 10 (1s)"],["1HZ25V","Volatility 25 (1s)"],["1HZ50V","Volatility 50 (1s)"],["1HZ75V","Volatility 75 (1s)"],["1HZ100V","Volatility 100 (1s)"]];
 const $=s=>document.querySelector(s);
 const S={sym:"R_100",ticks:[],pip:2,barrier:5,cur:"USD",token:sessionStorage.getItem("tk"),acct:null,pub:null,auth:null,subT:null,trades:[],pl:0,wins:0,wait:{},bot:false};
