@@ -1,4 +1,13 @@
-<!DOCTYPE html>
+function connect() {
+  ws = new WebSocket(`wss://ws.derivws.com/websockets/v3?app_id=${APP_ID}`);
+  ws.onopen = () => {
+    setStatus("Connected");
+    ws.send(JSON.stringify({active_symbols: "brief", product_type: "basic"}));
+  };
+  ws.onerror = () => setStatus("Connection error");
+  ws.onclose = () => { setStatus("Disconnected"); setTimeout(connect, 3000); };
+  ws.onmessage = handleMessage;
+}<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
